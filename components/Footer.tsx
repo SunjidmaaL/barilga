@@ -8,9 +8,9 @@ export default function Footer() {
         </div>
         <div>
           <h5 className="font-bold mb-3 text-white">Холбоо барих</h5>
-          <p>📍 Улаанбаатар, Монгол</p>
-          <p>📞 +976 99112233</p>
-          <p>✉️ info@barilga.mn</p>
+          <p>📍 ЧД 6-р хороо Вояж оффис 302, 305 тоот Ulaanbaatar, Mongolia </p>
+          <p>📞 +976 99015759 </p>
+          <p>✉️ bmat.material@gmail.com </p>
         </div>
         <div>
           <h5 className="font-bold mb-3 text-white">Сошиал</h5>
@@ -18,17 +18,11 @@ export default function Footer() {
             <a href="#" className="hover:opacity-80 transition-opacity">
               <img src="https://img.icons8.com/ios-filled/24/ffffff/facebook.png" alt="Facebook" />
             </a>
-            <a href="#" className="hover:opacity-80 transition-opacity">
-              <img src="https://img.icons8.com/ios-filled/24/ffffff/instagram-new.png" alt="Instagram" />
-            </a>
-            <a href="#" className="hover:opacity-80 transition-opacity">
-              <img src="https://img.icons8.com/ios-filled/24/ffffff/linkedin.png" alt="LinkedIn" />
-            </a>
           </div>
         </div>
       </div>
       <div className="text-center mt-8 text-gray-500 text-sm">
-        © 2025 Барилгын Нийлүүлэлт ХХК. Бүх эрх хуулиар хамгаалагдсан.
+        © 2025 Монголын Барилгын Материал Үйлдвэрлэгчдийн Холбоо. Бүх эрх хуулиар хамгаалагдсан.
       </div>
     </footer>
   )

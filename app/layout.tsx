@@ -8,8 +8,8 @@ import FacebookChat from '@/components/FacebookChat'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Барилгын Нийлүүлэлт ХХК',
-  description: 'Найдвартай түнш, чанартай бүтээгдэхүүн',
+  title: 'Монголын Барилгын Материал Үйлдвэрлэгчдийн Холбоо',
+  description: 'Барилгын салбарын хөгжлийг дэмжих, чанартай материал үйлдвэрлэгчдийн нэгдсэн холбоо',
 }
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="mn">
       <body className={inter.className}>
         <Header />
-        <main className="pt-20 md:pt-24">
+        <main className="pt-24 md:pt-28">
           {children}
         </main>
         <Footer />

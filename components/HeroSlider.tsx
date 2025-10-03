@@ -1,13 +1,32 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import { getFeaturedCategories, getCategories } from '@/lib/strapi'
+
+interface Category {
+  id: number
+  attributes: {
+    title: string
+    description: string
+    image?: {
+      data?: {
+        attributes: {
+          url: string
+        }
+      }
+    }
+  }
+}
 
 export default function HeroSlider() {
   const swiperRef = useRef<any>(null)
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const slides = [
+  // Default slides as fallback
+  const defaultSlides = [
     {
       id: 1,
       image: '/img/background.jpg',
@@ -16,17 +35,61 @@ export default function HeroSlider() {
     },
     {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2070&auto=format&fit=crop',
+      image: '/img/background1.jpg',
       title: 'Барилгын бүх төрлийн материал',
       subtitle: 'Найдвартай нийлүүлэлт, өргөн сонголтыг бид танд хүргэнэ'
     },
     {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1581090700227-1e37b190418e?q=80&w=2069&auto=format&fit=crop',
+      image: '/img/background2.jpg',
       title: 'Барилгын бүх төрлийн материал',
       subtitle: 'Найдвартай нийлүүлэлт, өргөн сонголтыг бид танд хүргэнэ'
     }
   ]
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        // First try to get featured categories
+        let data = await getFeaturedCategories()
+        
+        // If no featured categories, try to get all categories
+        if (!data || data.length === 0) {
+          data = await getCategories()
+        }
+        
+        setCategories(data || [])
+      } catch (error) {
+        console.error('Error loading categories:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchCategories()
+  }, [])
+
+  // Convert categories to slides format
+  const slides = categories.length > 0 
+    ? categories.map(category => ({
+        id: category.id,
+        image: category.attributes.image?.data?.attributes?.url || '/img/background.jpg',
+        title: category.attributes.title || 'Барилгын материал',
+        subtitle: category.attributes.description || 'Найдвартай нийлүүлэлт'
+      }))
+    : defaultSlides
+
+  // Loading state
+  if (loading) {
+    return (
+      <section className="relative h-[80vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Ачааллаж байна...</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="relative h-[80vh]">
@@ -57,7 +120,7 @@ export default function HeroSlider() {
         ))}
       </Swiper>
 
-      {/* Overlay text */}
+      {/* Dynamic overlay text - will be updated by Swiper */}
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-white px-6">
         <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
           Барилгын бүх төрлийн материал
