@@ -2,6 +2,32 @@ import { Suspense } from 'react'
 import NewsCard from '@/components/NewsCard'
 import { getNews } from '@/lib/strapi'
 
+interface NewsData {
+  id: number
+  title?: string
+  description?: string
+  content?: string
+  publishedAt?: string
+  image?: {
+    url: string
+    alternativeText?: string
+  }
+  attributes?: {
+    title?: string
+    description?: string
+    content?: string
+    publishedAt?: string
+    image?: {
+      data?: {
+        attributes?: {
+          url: string
+          alternativeText?: string
+        }
+      }
+    }
+  }
+}
+
 // Loading component
 function NewsLoading() {
   return (
@@ -25,7 +51,7 @@ function NewsLoading() {
 
 // News content component
 async function NewsContent() {
-  const newsData = await getNews()
+  const newsData: NewsData[] = await getNews()
 
   if (!newsData || newsData.length === 0) {
     return (
@@ -45,20 +71,29 @@ async function NewsContent() {
   return (
     <section className="max-w-7xl mx-auto px-6 py-16">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {newsData.map((news) => (
-          <NewsCard 
-            key={news.id} 
-            id={news.id.toString()}
-            title={news.title}
-            description={news.description || news.content}
-            date={new Date(news.publishedAt).toLocaleDateString('mn-MN')}
-            image={news.image?.url 
-              ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${news.image.url}`
-              : 'https://images.unsplash.com/photo-1529236183275-caea742b3443?q=80&w=2066&auto=format&fit=crop'
-            }
-            alt={news.image?.alternativeText || news.title}
-          />
-        ))}
+        {newsData.map((news) => {
+          // Get image URL from Strapi structure
+          const imageUrl = news.attributes?.image?.data?.attributes?.url
+            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${news.attributes.image.data.attributes.url}`
+            : news.image?.url 
+            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${news.image.url}`
+            : 'https://images.unsplash.com/photo-1529236183275-caea742b3443?q=80&w=2066&auto=format&fit=crop'
+
+          return (
+            <NewsCard 
+              key={news.id} 
+              id={news.id.toString()}
+              title={news.attributes?.title || news.title || 'Мэдээ'}
+              description={news.attributes?.description || news.attributes?.content || news.description || news.content || 'Мэдээлэл байхгүй байна.'}
+              date={news.attributes?.publishedAt || news.publishedAt 
+                ? new Date(news.attributes?.publishedAt || news.publishedAt).toLocaleDateString('mn-MN')
+                : 'Огноо байхгүй'
+              }
+              image={imageUrl}
+              alt={news.attributes?.image?.data?.attributes?.alternativeText || news.image?.alternativeText || news.attributes?.title || news.title || 'Мэдээ'}
+            />
+          )
+        })}
       </div>
     </section>
   )
@@ -71,7 +106,7 @@ export default function NewsPage() {
         <div className="max-w-7xl mx-auto px-6 py-14">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Мэдээ мэдээлэл</h1>
           <p className="mt-3 text-gray-600 max-w-3xl">
-            Салбарын чиг хандлага, дотоод мэдээ, үйл ажиллагааны шинэчлэл.
+            Барилгын салбарын чиг хандлага, дотоод мэдээ, үйл ажиллагааны шинэчлэл.
           </p>
         </div>
       </section>

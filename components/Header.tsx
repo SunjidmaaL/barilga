@@ -8,18 +8,19 @@ export default function Header() {
 
   const navigation = [
     { name: 'Нүүр', href: '/' },
-    { name: 'Үйл ажиллагаа', href: '/activities' },
+    { name: 'Танилцуулга', href: '/activities' },
     { name: 'Мэдээ мэдээлэл', href: '/news' },
     { name: 'Сургалт', href: '/training' },
     { name: 'Хууль эрх зүй', href: '/law' },
     { name: 'Тусгай зөвшөөрөл', href: '/licenses' },
+    { name: 'Гадаад харилцаа', href: '/foreign-relations' },
     { name: 'Холбоо барих', href: '/contact' },
   ]
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur border-b">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
-        <div className="flex lg:flex-1">
+        <div className="flex items-center">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Нүүр хуудас</span>
             <img 
@@ -31,12 +32,12 @@ export default function Header() {
         </div>
         
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex lg:gap-x-16">
+        <div className="hidden lg:flex items-center space-x-2">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
+              className="px-3 py-2 text-sm font-semibold text-gray-800 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200 whitespace-nowrap"
             >
               {item.name}
             </Link>

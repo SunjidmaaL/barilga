@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { getTrainings } from '@/lib/strapi'
+import TrainingList from '@/components/TrainingList'
 
 // Loading component
 function TrainingLoading() {
@@ -22,53 +23,7 @@ function TrainingLoading() {
 async function TrainingContent() {
   const trainingsData = await getTrainings()
 
-  if (!trainingsData || trainingsData.length === 0) {
-    return (
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="text-center py-12">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Сургалт олдсонгүй</h3>
-          <p className="text-gray-600">Одоогоор зохион байгуулах сургалт байхгүй байна.</p>
-        </div>
-      </section>
-    )
-  }
-
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {trainingsData.map((training) => (
-        <div key={training.id} className="rounded-xl bg-white p-6 shadow ring-1 ring-gray-200 hover:shadow-lg transition-shadow">
-          <div className="text-sm text-gray-500">
-            {new Date(training.date).toLocaleDateString('mn-MN')} • {training.location || 'Байршил тодорхойгүй'}
-          </div>
-          <h4 className="mt-2 text-lg font-semibold text-gray-900">{training.title}</h4>
-          <p className="mt-2 text-sm text-gray-600">{training.description}</p>
-          {training.price && (
-            <div className="mt-3 text-sm font-medium text-indigo-600">
-              Үнэ: {training.price.toLocaleString()}₮
-            </div>
-          )}
-          <div className="mt-4 flex gap-2">
-            <a 
-              href={`/training/${training.id}`}
-              className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
-            >
-              Дэлгэрэнгүй
-            </a>
-            {training.registration_url && (
-              <a 
-                href={training.registration_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500 transition-colors"
-              >
-                Бүртгүүлэх
-              </a>
-            )}
-          </div>
-        </div>
-      ))}
-    </section>
-  )
+  return <TrainingList trainings={trainingsData || []} />
 }
 
 export default function TrainingPage() {

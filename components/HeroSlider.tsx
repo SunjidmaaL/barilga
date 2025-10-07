@@ -92,7 +92,7 @@ export default function HeroSlider() {
   }
 
   return (
-    <section className="relative h-[80vh]">
+    <section className="relative min-h-[60vh] md:h-[80vh]">
       <Swiper
         ref={swiperRef}
         modules={[Navigation, Pagination, Autoplay]}
@@ -121,27 +121,25 @@ export default function HeroSlider() {
       </Swiper>
 
       {/* Dynamic overlay text - will be updated by Swiper */}
-      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-white px-6">
-        <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-          Барилгын бүх төрлийн материал
-        </h2>
-        <p className="mt-6 text-lg md:text-xl text-gray-200 max-w-3xl">
-          Найдвартай нийлүүлэлт, өргөн сонголтыг бид танд хүргэнэ
-        </p>
-        <div className="mt-8 flex gap-4">
-          <a 
-            href="#projects" 
-            className="pointer-events-auto inline-flex items-center rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
-          >
-            Төслүүд харах
-          </a>
-          <a 
-            href="#contact" 
-            className="pointer-events-auto inline-flex items-center rounded-md bg-white/10 px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/30 hover:bg-white/20 transition-colors"
-          >
-            Холбоо барих
-          </a>
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-white px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl w-full">
+          <p className="uppercase text-base sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold leading-tight tracking-wide break-words">
+            Монголын Барилгын Материал Үйлдвэрлэгчдийн Холбоо
+          </p>
         </div>
+        
+          <div className="mt-6 sm:mt-8 flex justify-center">
+            <a 
+              href="#projects" 
+              className="pointer-events-auto inline-flex items-center rounded-full px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 text-xs sm:text-sm md:text-base font-bold text-white shadow-xl hover:shadow-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all duration-300 transform hover:scale-105 hover:opacity-90"
+              style={{ backgroundColor: 'oklch(70.7% 0.165 254.624)' }}
+            >
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              Гишүүн байгууллагууд
+            </a>
+          </div>
       </div>
     </section>
   )
