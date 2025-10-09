@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import { getFeaturedCategories, getCategories } from '@/lib/strapi'
@@ -8,8 +8,6 @@ import { getFeaturedCategories, getCategories } from '@/lib/strapi'
 interface Category {
   id: number
   attributes: {
-    title: string
-    description: string
     image?: {
       data?: {
         attributes: {
@@ -21,30 +19,14 @@ interface Category {
 }
 
 export default function HeroSlider() {
-  const swiperRef = useRef<any>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
   // Default slides as fallback
   const defaultSlides = [
-    {
-      id: 1,
-      image: '/img/background.jpg',
-      title: 'Барилгын бүх төрлийн материал',
-      subtitle: 'Найдвартай нийлүүлэлт, өргөн сонголтыг бид танд хүргэнэ'
-    },
-    {
-      id: 2,
-      image: '/img/background1.jpg',
-      title: 'Барилгын бүх төрлийн материал',
-      subtitle: 'Найдвартай нийлүүлэлт, өргөн сонголтыг бид танд хүргэнэ'
-    },
-    {
-      id: 3,
-      image: '/img/background2.jpg',
-      title: 'Барилгын бүх төрлийн материал',
-      subtitle: 'Найдвартай нийлүүлэлт, өргөн сонголтыг бид танд хүргэнэ'
-    }
+    { id: 1, image: '/img/background.jpg' },
+    { id: 2, image: '/img/background1.jpg' },
+    { id: 3, image: '/img/background2.jpg' }
   ]
 
   useEffect(() => {
@@ -73,9 +55,7 @@ export default function HeroSlider() {
   const slides = categories.length > 0 
     ? categories.map(category => ({
         id: category.id,
-        image: category.attributes.image?.data?.attributes?.url || '/img/background.jpg',
-        title: category.attributes.title || 'Барилгын материал',
-        subtitle: category.attributes.description || 'Найдвартай нийлүүлэлт'
+        image: category.attributes.image?.data?.attributes?.url || '/img/background.jpg'
       }))
     : defaultSlides
 
@@ -94,7 +74,6 @@ export default function HeroSlider() {
   return (
     <section className="relative min-h-[60vh] md:h-[80vh]">
       <Swiper
-        ref={swiperRef}
         modules={[Navigation, Pagination, Autoplay]}
         loop={true}
         autoplay={{
@@ -130,7 +109,7 @@ export default function HeroSlider() {
         
           <div className="mt-6 sm:mt-8 flex justify-center">
             <a 
-              href="#projects" 
+              href="#members" 
               className="pointer-events-auto inline-flex items-center rounded-full px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 text-xs sm:text-sm md:text-base font-bold text-white shadow-xl hover:shadow-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all duration-300 transform hover:scale-105 hover:opacity-90"
               style={{ backgroundColor: 'oklch(70.7% 0.165 254.624)' }}
             >
