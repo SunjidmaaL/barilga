@@ -1,193 +1,158 @@
-'use client'
+import { getContacts } from '@/lib/strapi'
 
-import { useState, useEffect } from 'react'
-import { getContacts, submitContactForm } from '@/lib/strapi'
-
-interface ContactInfo {
-  id: number
-  attributes: {
-    address: string
-    phone: string
-    email: string
-    workingHours: string
-    description: string
-  }
+interface ContactItem {
+  id?: string | number
+  label: string
+  value: string
+  icon: 'location' | 'phone' | 'email' | 'fax' | 'clock'
+  iconBgColor?: string
+  iconColor?: string
 }
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  })
-  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+export default async function ContactPage() {
+  const contacts = await getContacts()
+  console.log('Contacts from API:', contacts)
 
-  useEffect(() => {
-    const fetchContactInfo = async () => {
-      try {
-        const data = await getContacts()
-        setContactInfo(data)
-      } catch (error) {
-        console.error('Error loading contact info:', error)
-      } finally {
-        setLoading(false)
-      }
+  // Fallback contact information if API fails
+  const fallbackContacts: ContactItem[] = [
+    {
+      id: 'fallback-1',
+      label: 'Хаяг',
+      value: 'Улаанбаатар хот, Сүхбаатар дүүрэг, Баянзүрх дүүрэг, 13-р хороо',
+      icon: 'location',
+      iconBgColor: 'bg-indigo-100',
+      iconColor: 'text-indigo-600'
+    },
+    {
+      id: 'fallback-2',
+      label: 'Утас',
+      value: '99015759',
+      icon: 'phone',
+      iconBgColor: 'bg-blue-100',
+      iconColor: 'text-blue-600'
+    },
+    {
+      id: 'fallback-3',
+      label: 'И-мэйл',
+      value: 'info@barilga.mn',
+      icon: 'email',
+      iconBgColor: 'bg-green-100',
+      iconColor: 'text-green-600'
     }
-    
-    fetchContactInfo()
-  }, [])
+  ]
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitting(true)
-    setSubmitStatus('idle')
-    
-    try {
-      await submitContactForm(formData)
-      setSubmitStatus('success')
-      setFormData({ name: '', email: '', message: '' })
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setSubmitStatus('error')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  if (loading) {
-    return (
-      <section className="bg-indigo-50 border-y border-indigo-100">
-        <div className="max-w-7xl mx-auto px-6 py-14">
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-            <span className="ml-3 text-gray-600">Ачааллаж байна...</span>
-          </div>
-        </div>
-      </section>
-    )
-  }
+  const displayContacts = (contacts && Array.isArray(contacts) && contacts.length > 0) ? contacts : fallbackContacts
+  console.log('Display contacts:', displayContacts)
 
   return (
     <>
-      <section className="bg-indigo-50 border-y border-indigo-100">
-        <div className="max-w-7xl mx-auto px-6 py-14">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Холбоо барих</h1>
-          <p className="mt-3 text-gray-600 max-w-3xl">
-            {contactInfo?.attributes?.description || 'Бид танд туслахад үргэлж бэлэн.'}
-          </p>
+      {/* Contact Information & Map Section */}
+      <section className="bg-white pt-0 pb-8 sm:pt-0 sm:pb-12 lg:pt-0 lg:pb-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-12 lg:mb-16">     
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-start">
+            {/* Contact Information */}
+            <div className="space-y-4 sm:space-y-6">
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8">
+                
+                <div className="space-y-2 sm:space-y-3">
+                  {displayContacts.map((contact: ContactItem, index: number) => (
+                    <div key={contact.id || index} className="flex items-start space-x-2 sm:space-x-3">
+                      <div className="flex-shrink-0">
+                        <div className={`w-6 h-6 sm:w-7 sm:h-7 ${contact.iconBgColor || 'bg-indigo-100'} rounded-full flex items-center justify-center`}>
+                          {contact.icon === 'location' && (
+                            <svg className={`w-3 h-3 sm:w-4 sm:h-4 ${contact.iconColor || 'text-indigo-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                          )}
+                          {contact.icon === 'phone' && (
+                            <svg className={`w-3 h-3 sm:w-4 sm:h-4 ${contact.iconColor || 'text-blue-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                          )}
+                          {contact.icon === 'email' && (
+                            <svg className={`w-3 h-3 sm:w-4 sm:h-4 ${contact.iconColor || 'text-green-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                          )}
+                          {contact.icon === 'fax' && (
+                            <svg className={`w-3 h-3 sm:w-4 sm:h-4 ${contact.iconColor || 'text-purple-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                          )}
+                          {contact.icon === 'clock' && (
+                            <svg className={`w-3 h-3 sm:w-4 sm:h-4 ${contact.iconColor || 'text-purple-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm text-gray-900">{contact.label}</h4>
+                        <p className="text-sm text-gray-600">{contact.value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Team Information */}
+              <div className="space-y-4">
+                
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-semibold text-xs text-gray-900 mb-1">Г.ЦЭРМАА</h4>
+                    <p className="text-xs text-gray-600 leading-snug">Барилгын материалын үйлдвэрлэлийн холбооны гүйцэтгэх захирал</p>
+                    <p className="text-xs text-gray-600 leading-snug">УТАС: 99015759</p>
+                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-semibold text-xs text-gray-900 mb-1">М.УЛААНХҮҮХЭН</h4>
+                    <p className="text-xs text-gray-600 leading-snug">Барилгын материалын үйлдвэрийн тусгай зөвшөөрөл хариуцсан мэргэжилтэн</p>
+                    <p className="text-xs text-gray-600 leading-snug">УТАС: 99143658</p>
+                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-semibold text-xs text-gray-900 mb-1">Г.ХИШИГЖАРГАЛ</h4>
+                    <p className="text-xs text-gray-600 leading-snug">Оффис менежер</p>
+                    <p className="text-xs text-gray-600 leading-snug">УТАС: 95953178</p>
+                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-semibold text-xs text-gray-900 mb-1">Б.ПҮРЭВСҮРЭН</h4>
+                    <p className="text-xs text-gray-600 leading-snug">Гадаад харилцааны менежер</p>
+                    <p className="text-xs text-gray-600 leading-snug">УТАС: 99156327</p>
+                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Map */}
+            <div className="bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg">
+              <div className="h-[550px] sm:h-[650px] lg:h-[750px]">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.7156!2d106.9176!3d47.9187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5d96925b5c8c9b5b%3A0x4e1b8d9c8f1a2b3c!2sUlaanbaatar%2C%20Mongolia!5e0!3m2!1sen!2smn!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full"
+                ></iframe>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div className="space-y-4">
-          <div className="rounded-xl bg-white p-6 shadow ring-1 ring-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Хаяг</h3>
-            <p className="mt-2 text-gray-600">
-              {contactInfo?.attributes?.address || 'Улаанбаатар хот, Монгол Улс'}
-            </p>
-          </div>
-          <div className="rounded-xl bg-white p-6 shadow ring-1 ring-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Холбоо барих</h3>
-            <p className="mt-2 text-gray-600">
-              Утас: {contactInfo?.attributes?.phone || '+976 99112233'}
-            </p>
-            <p className="text-gray-600">
-              И-мэйл: {contactInfo?.attributes?.email || 'info@barilga.mn'}
-            </p>
-            {contactInfo?.attributes?.workingHours && (
-              <p className="mt-2 text-gray-600">
-                Ажлын цаг: {contactInfo.attributes.workingHours}
-              </p>
-            )}
-          </div>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="rounded-xl bg-white p-6 shadow ring-1 ring-gray-200">
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Нэр</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                placeholder="Таны нэр"
-                required
-                disabled={submitting}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">И-мэйл</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                placeholder="name@example.com"
-                required
-                disabled={submitting}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Зурвас</label>
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={5}
-                className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                placeholder="Таны мессеж"
-                required
-                disabled={submitting}
-              />
-            </div>
-            
-            {/* Status messages */}
-            {submitStatus === 'success' && (
-              <div className="rounded-md bg-green-50 p-4">
-                <p className="text-sm text-green-800">
-                  ✅ Таны зурвас амжилттай илгээгдлээ. Бид удахгүй танд хариулах болно.
-                </p>
-              </div>
-            )}
-            
-            {submitStatus === 'error' && (
-              <div className="rounded-md bg-red-50 p-4">
-                <p className="text-sm text-red-800">
-                  ❌ Зурвас илгээхэд алдаа гарлаа. Дахин оролдоно уу.
-                </p>
-              </div>
-            )}
-            
-            <button
-              type="submit"
-              disabled={submitting}
-              className="mt-2 inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {submitting ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Илгээж байна...
-                </>
-              ) : (
-                'Илгээх'
-              )}
-            </button>
-          </div>
-        </form>
-      </section>
     </>
   )
 }

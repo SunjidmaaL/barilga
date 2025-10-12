@@ -14,7 +14,9 @@ export default function HomePage() {
       <section id="members" className="max-w-7xl mx-auto py-20 px-6">
         <div className="flex items-end justify-between mb-10">
           <div>
-            <h3 className="text-3xl font-semibold text-gray-800 mb-2">Гишүүн байгууллагууд</h3>
+            <h3 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
+              Гишүүн байгууллагууд
+            </h3>
           </div>
         </div>
         <MemberCategories />
@@ -23,9 +25,9 @@ export default function HomePage() {
       {/* News */}
       <section id="news" className="max-w-7xl mx-auto py-20 px-6">
         <div className="flex items-end justify-between mb-10">
-          <h3 className="text-3xl font-semibold text-gray-800">Шинэ мэдээ</h3>
-          <a href="/news" className="hidden sm:inline text-indigo-600 hover:text-indigo-500 font-medium">
-            Бүгдийг үзэх →
+          <h3 className="text-3xl font-bold tracking-tight text-gray-900">Шинэ мэдээ</h3>
+          <a href="/news" className="hidden sm:inline text-indigo-600 hover:text-indigo-500 font-semibold transition-colors duration-200">
+            Цааш үзэх →
           </a>
         </div>
         <HomepageNews />
@@ -35,8 +37,8 @@ export default function HomePage() {
       <section id="trainings" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-10">
-            <h3 className="text-3xl font-semibold text-gray-800">Сургалтын зар</h3>
-            <a href="/training" className="hidden sm:inline text-indigo-600 hover:text-indigo-500 font-medium">
+            <h3 className="text-3xl font-bold tracking-tight text-gray-900">Сургалтын зар</h3>
+            <a href="/training" className="hidden sm:inline text-indigo-600 hover:text-indigo-500 font-semibold transition-colors duration-200">
               Цааш үзэх →
             </a>
           </div>

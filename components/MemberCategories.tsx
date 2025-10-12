@@ -18,7 +18,7 @@ export default function MemberCategories() {
       title: 'Гишүүнчлэл',
       color: 'from-blue-500 to-cyan-500',
       gradient: 'bg-gradient-to-br from-blue-50 to-cyan-50',
-      href: '/projects',
+      href: '/members',
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -30,7 +30,7 @@ export default function MemberCategories() {
       title: 'Төслүүд',
       color: 'from-purple-500 to-pink-500',
       gradient: 'bg-gradient-to-br from-purple-50 to-pink-50',
-      href: '/members',
+      href: '/projects',
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -74,7 +74,7 @@ export default function MemberCategories() {
 
             {/* Title */}
             <div className="mb-6">
-              <h4 className="text-2xl font-bold text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300">
+              <h4 className="text-2xl font-extrabold tracking-tight text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 leading-tight">
                 {category.title}
               </h4>
             </div>

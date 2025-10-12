@@ -136,8 +136,8 @@ export default function HomepageNews() {
             description={description}
             date={formattedDate}
             image={imageUrl 
-              ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'}${imageUrl}`
-              : 'https://images.unsplash.com/photo-1529236183275-caea742b3443?q=80&w=2066&auto=format&fit=crop'}
+              ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imageUrl}`
+              : '/img/background.jpg'}
             alt={imageAlt || title}
           />
         )

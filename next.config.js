@@ -4,7 +4,7 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ['images.unsplash.com', 'img.icons8.com', 'tailwindcss.com'],
+    domains: ['img.icons8.com', 'tailwindcss.com', 'localhost', 'effortless-luck-023aebe70f.strapiapp.com'],
   },
 }
 

@@ -3,26 +3,35 @@
 import { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
-import { getFeaturedCategories, getCategories } from '@/lib/strapi'
 
-interface Category {
+// Import Swiper styles
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import { getSlides } from '@/lib/strapi'
+
+interface Slide {
   id: number
-  attributes: {
-    image?: {
-      data?: {
-        attributes: {
-          url: string
-        }
-      }
+  name?: string
+  image?: Array<{
+    id: number
+    name: string
+    url: string
+    alternativeText?: string
+    formats?: {
+      large?: { url: string }
+      medium?: { url: string }
+      small?: { url: string }
+      thumbnail?: { url: string }
     }
-  }
+  }>
+  order?: number
 }
 
 export default function HeroSlider() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
+  const [slides, setSlides] = useState<Slide[]>([])
 
-  // Default slides as fallback
+  // Default slides
   const defaultSlides = [
     { id: 1, image: '/img/background.jpg' },
     { id: 2, image: '/img/background1.jpg' },
@@ -30,73 +39,93 @@ export default function HeroSlider() {
   ]
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadSlides = async () => {
       try {
-        // First try to get featured categories
-        let data = await getFeaturedCategories()
+        const data = await getSlides()
         
-        // If no featured categories, try to get all categories
-        if (!data || data.length === 0) {
-          data = await getCategories()
+        if (data && data.length > 0) {
+          setSlides(data)
+        } else {
+          setSlides([])
         }
-        
-        setCategories(data || [])
-      } catch (error) {
-        console.error('Error loading categories:', error)
-      } finally {
-        setLoading(false)
+      } catch (err) {
+        console.error('Error loading slides:', err)
+        setSlides([])
       }
     }
-    
-    fetchCategories()
+
+    loadSlides()
   }, [])
 
-  // Convert categories to slides format
-  const slides = categories.length > 0 
-    ? categories.map(category => ({
-        id: category.id,
-        image: category.attributes.image?.data?.attributes?.url || '/img/background.jpg'
-      }))
-    : defaultSlides
 
-  // Loading state
-  if (loading) {
-    return (
-      <section className="relative h-[80vh] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Ачааллаж байна...</p>
-        </div>
-      </section>
-    )
-  }
+  // Determine which slides to use
+  const displaySlides = slides.length > 0 ? slides : defaultSlides
+  const shouldLoop = displaySlides.length > 1
+  const shouldAutoplay = displaySlides.length > 1
+  const shouldShowControls = displaySlides.length > 1
+
 
   return (
     <section className="relative min-h-[60vh] md:h-[80vh]">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        loop={true}
-        autoplay={{
+        spaceBetween={0}
+        slidesPerView={1}
+        loop={shouldLoop}
+        autoplay={shouldAutoplay ? {
           delay: 4000,
           disableOnInteraction: false,
-        }}
+          pauseOnMouseEnter: true,
+        } : false}
         speed={800}
-        pagination={{
+        pagination={shouldShowControls ? {
           clickable: true,
-        }}
-        navigation={true}
-        className="h-full"
+          dynamicBullets: true,
+        } : false}
+        navigation={shouldShowControls}
+        className="h-full w-full"
+       
       >
-        {slides.map((slide) => (
-          <SwiperSlide key={slide.id}>
-            <div 
-              className="relative h-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${slide.image})` }}
-            >
-              <div className="absolute inset-0 bg-black/40"></div>
-            </div>
-          </SwiperSlide>
-        ))}
+        {slides.length > 0 ? (
+          slides.map((slide) => {
+            // API-ийн бүтцээс зурагны URL-ийг зөв татах
+            let imageUrl = null
+            let imageAlt = slide.name || 'Slide'
+            
+            // Image талбар нь array байна, эхний элементийг авах
+            if (slide.image && Array.isArray(slide.image) && slide.image.length > 0) {
+              const imageData = slide.image[0]
+              imageUrl = imageData.url
+              imageAlt = imageData.alternativeText || imageData.name || slide.name || 'Slide'
+            }
+            
+            const fullImageUrl = imageUrl?.startsWith('http') 
+              ? imageUrl
+              : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imageUrl}`
+           
+            return (
+              <SwiperSlide key={slide.id}>
+                <div 
+                  className="relative h-full bg-cover bg-center"
+                  style={{ backgroundImage: `url(${fullImageUrl})` }}
+                >
+                  <div className="absolute inset-0 bg-black/40"></div>
+                </div>
+              </SwiperSlide>
+            )
+          })
+        ) : (
+          defaultSlides.map((slide) => (
+            <SwiperSlide key={slide.id}>
+              <div 
+                className="relative h-full bg-cover bg-center"
+                style={{ backgroundImage: `url(${slide.image})` }}
+              >
+                <div className="absolute inset-0 bg-black/40"></div>
+              </div>
+            </SwiperSlide>
+          ))
+        )}
       </Swiper>
 
       {/* Dynamic overlay text - will be updated by Swiper */}
@@ -107,18 +136,18 @@ export default function HeroSlider() {
           </p>
         </div>
         
-          <div className="mt-6 sm:mt-8 flex justify-center">
-            <a 
-              href="#members" 
-              className="pointer-events-auto inline-flex items-center rounded-full px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 text-xs sm:text-sm md:text-base font-bold text-white shadow-xl hover:shadow-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all duration-300 transform hover:scale-105 hover:opacity-90"
-              style={{ backgroundColor: 'oklch(70.7% 0.165 254.624)' }}
-            >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              Гишүүн байгууллагууд
-            </a>
-          </div>
+        <div className="mt-6 sm:mt-8 flex justify-center">
+          <a 
+            href="#members" 
+            className="pointer-events-auto inline-flex items-center rounded-full px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 text-xs sm:text-sm md:text-base font-bold text-white shadow-xl hover:shadow-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all duration-300 transform hover:scale-105 hover:opacity-90"
+            style={{ backgroundColor: 'oklch(70.7% 0.165 254.624)' }}
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            Гишүүн байгууллагууд
+          </a>
+        </div>
       </div>
     </section>
   )

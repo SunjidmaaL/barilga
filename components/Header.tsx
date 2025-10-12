@@ -19,25 +19,25 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur border-b">
-      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-4 sm:p-6 lg:px-8">
         <div className="flex items-center">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Нүүр хуудас</span>
             <img 
               src="/img/logo.jpg" 
               alt="Лого" 
-              className="h-14 w-14 rounded-full object-cover shadow-lg border-2 border-indigo-100" 
+              className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full object-cover shadow-lg border-2 border-indigo-100" 
             />
           </Link>
         </div>
         
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-2">
+        <div className="hidden md:flex items-center space-x-1 xl:space-x-2">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="px-3 py-2 text-sm font-semibold text-gray-800 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200 whitespace-nowrap"
+              className="px-2 py-2 text-xs xl:text-sm font-semibold text-gray-800 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200 whitespace-nowrap"
             >
               {item.name}
             </Link>
@@ -45,7 +45,7 @@ export default function Header() {
         </div>
 
         {/* Mobile menu button */}
-        <div className="flex lg:hidden">
+        <div className="flex md:hidden">
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -67,7 +67,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
+        <div className="md:hidden fixed inset-0 z-50">
           {/* Overlay with strong blur */}
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-xl transition-all duration-300" 
@@ -75,11 +75,11 @@ export default function Header() {
           />
           
           {/* Menu panel */}
-          <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white/95 backdrop-blur-sm shadow-2xl transform transition-transform duration-300 ease-in-out">
+          <div className="fixed inset-y-0 right-0 w-full max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-sm shadow-2xl transform transition-transform duration-300 ease-in-out">
             <div className="flex flex-col h-full">
               {/* Header with close button */}
-              <div className="flex items-center justify-between p-5 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Цэс</h2>
+              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Цэс</h2>
                 <button
                   type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -93,13 +93,13 @@ export default function Header() {
               </div>
               
               {/* Navigation items */}
-              <nav className="flex-1 px-5 py-6 bg-white/90 backdrop-blur-sm">
-                <div className="space-y-2">
+              <nav className="flex-1 px-4 sm:px-5 py-6 bg-white/90 backdrop-blur-sm overflow-y-auto">
+                <div className="space-y-1 sm:space-y-2">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="block px-3 py-3 text-base font-medium text-gray-900 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-all duration-200 border border-transparent hover:border-indigo-200"
+                      className="block px-3 py-2 sm:py-3 text-sm sm:text-base font-medium text-gray-900 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-all duration-200 border border-transparent hover:border-indigo-200"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}

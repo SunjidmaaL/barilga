@@ -45,7 +45,7 @@ export default function NewsCard({ id, title, description, date, image, alt }: N
   }
 
   // Fallback image URL
-  const fallbackImage = 'https://images.unsplash.com/photo-1529236183275-caea742b3443?q=80&w=2066&auto=format&fit=crop'
+  const fallbackImage = '/img/background.jpg'
 
   return (
     <Link href={`/news/${id}`} className="block">
