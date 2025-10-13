@@ -138,7 +138,7 @@ export default async function ContactPage() {
             <div className="bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg">
               <div className="h-[550px] sm:h-[650px] lg:h-[750px]">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.7156!2d106.9176!3d47.9187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5d96925b5c8c9b5b%3A0x4e1b8d9c8f1a2b3c!2sUlaanbaatar%2C%20Mongolia!5e0!3m2!1sen!2smn!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3289.666352511148!2d106.90693059211164!3d47.92658319163034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5d96930012bdd359%3A0x707c29cf12cab3f4!2z0JLQvtGP0LYg0L7RhNGE0LjRgQ!5e1!3m2!1sen!2sus!4v1760319969441!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

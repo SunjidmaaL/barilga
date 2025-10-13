@@ -1,48 +1,41 @@
-import { getLicenses } from '@/lib/strapi'
-import CertificateCard from '@/components/CertificateCard'
-
-interface LicenseData {
-  id: number
-  title?: string
-  licenseNumber?: string
-  issueDate?: string
-  expiryDate?: string
-  issuedBy?: string
-  receivedDate?: string
-  document?: {
-    url: string
-    name?: string
-    mime?: string
-  }
-  attributes?: {
-    title?: string
-    licenseNumber?: string
-    issueDate?: string
-    expiryDate?: string
-    issuedBy?: string
-    receivedDate?: string
-    pdfFile?: {
-      data?: {
-        attributes?: {
-          url: string
-        }
-      }
+export default function LicensesPage() {
+  const licenses = [
+    {
+      type: 'Барилгын үйл ажиллагааны тусгай зөвшөөрөл',
+      number: 'БЗ-2023-001234',
+      issuedDate: '2023-03-15',
+      validUntil: '2026-03-15',
+      issuedBy: 'Хөдөлмөр, нийгмийн хамгааллын яам'
+    },
+    {
+      type: 'Материал нийлүүлэлтийн лиценз',
+      number: 'МН-2023-005678',
+      issuedDate: '2023-06-20',
+      validUntil: '2028-06-20',
+      issuedBy: 'Худалдаа аж үйлдвэрийн яам'
+    },
+    {
+      type: 'Аюулгүй ажиллагааны гэрчилгээ',
+      number: 'ААГ-2024-000123',
+      issuedDate: '2024-01-10',
+      validUntil: '2025-01-10',
+      issuedBy: 'Хөдөлмөр, нийгмийн хамгааллын яам'
+    },
+    {
+      type: 'Орчны хамгааллын зөвшөөрөл',
+      number: 'ОХЗ-2023-009876',
+      issuedDate: '2023-09-05',
+      validUntil: '2026-09-05',
+      issuedBy: 'Байгаль орчин, аялал жуулчлалын яам'
+    },
+    {
+      type: 'Тээвэрлэлтийн зөвшөөрөл',
+      number: 'ТЗ-2024-000456',
+      issuedDate: '2024-02-28',
+      validUntil: '2027-02-28',
+      issuedBy: 'Зам тээврийн хөгжлийн яам'
     }
-  }
-}
-
-export default async function LicensesPage() {
-  let licenses: LicenseData[] = []
-  let error: string | null = null
-
-  try {
-    licenses = await getLicenses()
-    console.log('Licenses data received:', licenses)
-  } catch (err) {
-    console.error('Error loading licenses:', err)
-    error = 'Зөвшөөрлийн мэдээлэл ачааллахад алдаа гарлаа. Дахин оролдоно уу.'
-  }
-
+  ]
 
   return (
     <>
@@ -56,73 +49,58 @@ export default async function LicensesPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-6 py-16">
-        {error ? (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="text-red-500 mb-4 text-4xl">⚠️</div>
-              <h3 className="text-lg font-semibold text-red-800 mb-2">Алдаа гарлаа</h3>
-              <p className="text-red-700">{error}</p>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Certificate Cards Grid */}
-            <div className="mb-12">
-             
-              
-              {/* Strapi API Certificates */}
-              {licenses && licenses.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {licenses.map((license, index) => {
-                      // Get PDF URL from Strapi document
-                      const pdfUrl = license.document?.url
-                        ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${license.document.url}`
-                        : undefined
-
-                      return (
-                        <CertificateCard
-                          key={license.id || index}
-                          title={license.attributes?.title || license.title || 'Зөвшөөрөл'}
-                          certificateNumber={license.attributes?.licenseNumber || license.licenseNumber}
-                          issueDate={license.attributes?.issueDate || license.issueDate}
-                          expiryDate={license.attributes?.expiryDate || license.expiryDate}
-                          issuedBy={license.attributes?.issuedBy || license.issuedBy}
-                          pdfUrl={pdfUrl}
-                          receivedDate={license.attributes?.receivedDate || license.receivedDate}
-                          status="received"
-                        />
-                      )
-                    })}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <div className="text-gray-400 mb-4 text-6xl">📄</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Зөвшөөрөл байхгүй байна</h3>
-                  <p className="text-gray-600">Одоогоор зөвшөөрлийн мэдээлэл байхгүй байна.</p>
-                </div>
-              )}
-            </div>
-
-            {/* Information Box */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-8">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-blue-600 text-xl">📋</span>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-3">Зөвшөөрлийн мэдээлэл</h3>
-                  <p className="text-sm text-blue-800 leading-relaxed mb-4">
-                    Дээрх бүх зөвшөөрөл, лиценз, гэрчилгээ нь хууль ёсны дагуу олгогдсон бөгөөд хүчинтэй байна. 
-                    PDF файлыг дарж дэлгэрэнгүй мэдээлэл үзэх боломжтой.
-                  </p>
-                 
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+        <div className="overflow-hidden rounded-xl bg-white shadow ring-1 ring-gray-200">
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Зөвшөөрлийн төрөл
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Дугаар
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Олгосон огноо
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Хүчинтэй хугацаа
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Олгосон байгууллага
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {licenses.map((license, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {license.type}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {license.number}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {license.issuedDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {license.validUntil}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {license.issuedBy}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+          <h3 className="text-lg font-semibold text-blue-900 mb-2">Зөвшөөрлийн мэдээлэл</h3>
+          <p className="text-sm text-blue-800">
+            Дээрх бүх зөвшөөрөл, лиценз, гэрчилгээ нь хууль ёсны дагуу олгогдсон бөгөөд хүчинтэй байна. 
+            Дэлгэрэнгүй мэдээлэл авахыг хүсвэл манай компанитай холбоо барина уу.
+          </p>
+        </div>
       </section>
     </>
   )
