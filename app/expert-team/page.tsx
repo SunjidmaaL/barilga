@@ -2,233 +2,181 @@ export default function ExpertTeamPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-20 md:py-32 lg:py-40 overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-purple-400/20 to-pink-600/20 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-cyan-400/10 to-blue-600/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          
-          {/* Main heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 mb-8 tracking-tight leading-tight">
-            Экспертийн багийн
-            <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              ажил
-            </span>
-          </h1>
-          
-          {/* Decorative line */}
-          <div className="flex items-center justify-center mb-10">
-            <div className="w-16 h-1 bg-gradient-to-r from-transparent to-blue-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-blue-500 rounded-full mx-4"></div>
-            <div className="w-16 h-1 bg-gradient-to-l from-transparent to-blue-500 rounded-full"></div>
-          </div>
-        </div>
-
-        {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full h-16 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
-          </svg>
+      <section className="border-indigo-100 bg-indigo-50 border-y">
+        <div className="px-6 mx-auto max-w-7xl py-14">
+          <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">Экспертийн багийн ажил</h1>
+          <p className="max-w-3xl mt-3 text-gray-600">
+          Багийн гүйцэтгэдэг үндсэн чиг үүрэг болон үйл ажиллагааг танилцуулна.
+          </p>
         </div>
       </section>
 
+
       {/* Process Control Section */}
-      <section className="py-12 md:py-16 lg:py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="bg-gray-900 px-4 sm:px-6 md:px-8 py-4 md:py-6">
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-white tracking-wide text-center">
+      <section className="relative py-16 lg:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="overflow-hidden transition-all duration-300 border border-gray-200 shadow-lg bg-white/90 backdrop-blur-md rounded-2xl ">
+            {/* Header */}
+            <div className="relative py-6 text-center bg-gradient-to-r to-indigo-400 via-blue-400 from-indigo-400 md:py-8">
+              <h2 className="text-2xl font-light tracking-wide text-white md:text-3xl lg:text-4xl drop-shadow-md">
                 ПРОЦЕССИЙН ХЯНАЛТ
               </h2>
+              <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-indigo-400 via-blue-400 to-indigo-400"></div>
             </div>
-            
-            <div className="p-4 sm:p-6 md:p-8 lg:p-12">
-              <div className="bg-gray-50 rounded-lg md:rounded-xl p-4 sm:p-6 md:p-8 border-l-4 border-gray-900 mb-8 md:mb-12">
-                <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed">
-                  <span className="font-semibold text-gray-900">МБМҮХолбоо</span> нь 
-                  <span className="font-semibold"> 2012 оноос хойш</span> барилгын материалын үйлдвэрлэлд 
-                  тусгай зөвшөөрөл олгох эс олгох ажлын хүрээнд хамгийн үр дүнтэй зохион байгуулалтанд 
-                  оруулж үйлдвэрүүдээр <span className="font-semibold text-gray-900">"ЗӨВЛӨХ МЭРГЭЖЛИЙН БАГ"</span> 
+
+            {/* Main content */}
+            <div className="p-6 sm:p-8 md:p-12">
+              {/* Intro paragraph */}
+              <div className="p-6 mb-12 transition-transform duration-300 border-l-4 border-indigo-700 shadow-sm bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl md:p-8 ">
+                <p className="text-base leading-relaxed text-gray-700 md:text-lg">
+                  <span className="font-semibold text-gray-900">МБМҮХолбоо</span> нь
+                  <span className="font-semibold"> 2012 оноос хойш</span> барилгын материалын үйлдвэрлэлд
+                  тусгай зөвшөөрөл олгох эс олгох ажлын хүрээнд хамгийн үр дүнтэй зохион байгуулалтанд
+                  оруулж үйлдвэрүүдээр{" "}
+                  <span className="font-semibold text-indigo-700">"ЗӨВЛӨХ МЭРГЭЖЛИЙН БАГ"</span>
                   ажиллуулж эхлэсэн болно.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-                <div className="group">
-                  <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-lg sm:text-xl flex-shrink-0">
-                      📜
-                    </div>
-                    <div>
-                      <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-900 mb-2 sm:mb-3">
-                        Ажиллах журам
-                      </h3>
-                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        "Экспертийн мэргэжлийн баг"-ийн ажиллах журмыг дотоодоо батлуулан 
-                        мэргэжлийн инженер, зөвлөхүүдийг ажиллуулдаг.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              {/* Cards */}
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                {[
+                  {
+                    title: "Ажиллах журам",
+                    desc: `"Экспертийн мэргэжлийн баг"-ийн ажиллах журмыг дотооддоо батлуулан
+              мэргэжлийн инженер, зөвлөхүүдийг ажиллуулдаг.`,
+                  },
+                  {
+                    title: "Хамтын ажиллагаа",
+                    desc: `Тус мэргэжлийн баг нь үйлдвэрүүдэд мэргэжлийн зөвлөгөө өгөх,
+              зөвлөмж өгч хамтын ажиллагаа, эргэх холбоог бий болгодог болно.`,
+                  },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="relative p-6 overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-sm rounded-2xl md:p-8 group hover:shadow-xl hover:-translate-y-1"
+                  >
+                    {/* Hover gradient overlay */}
+                    <div className="absolute inset-0 transition-opacity duration-500 opacity-0 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-blue-400/10 to-purple-400/10 group-hover:opacity-100"></div>
 
-                <div className="group">
-                  <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-lg sm:text-xl flex-shrink-0">
-                      🤝
-                    </div>
-                    <div>
-                      <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-900 mb-2 sm:mb-3">
-                        Хамтын ажиллагаа
+                    {/* Border glow ring */}
+                    <div className="absolute inset-0 transition duration-300 rounded-2xl ring-1 ring-gray-200 group-hover:ring-indigo-400/40"></div>
+
+                    {/* Content */}
+                    <div className="relative z-10">
+                      <h3 className="mb-3 text-lg font-semibold text-gray-900 transition-colors duration-300 md:text-xl group-hover:text-indigo-700">
+                        {item.title}
                       </h3>
-                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        Тус мэргэжлийн баг нь үйлдвэрүүдэд мэргэжлийн зөвлөгөө өгөх, 
-                        зөвлөмж өгч хамтын ажиллагаа эргэх холбоог бий болгодог болно.
-                      </p>
+                      <p className="text-sm leading-relaxed text-gray-600 md:text-base">{item.desc}</p>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
+
       {/* Team Members Section */}
-      <section className="py-12 md:py-16 lg:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-3 sm:mb-4">Багийн бүрэлдэхүүн</h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-500">Мэргэжлийн инженер, зөвлөхүүд</p>
+      <section className="py-12 bg-white md:py-16 lg:py-20">
+        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="mb-12 text-center md:mb-16">
+            <h2 className="mb-3 text-2xl font-light text-gray-900 sm:text-3xl md:text-4xl lg:text-5xl sm:mb-4">Багийн бүрэлдэхүүн</h2>
+            <p className="text-sm text-gray-500 sm:text-base md:text-lg">Мэргэжлийн инженер, зөвлөхүүд</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            <div className="group text-center p-4 sm:p-6 md:p-8 rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors duration-200">
-              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-200">
-                ⚙️
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
+            {[
+              "Технологич инженер",
+              "Механик инженер",
+              "Цахилгааны инженер",
+              "Мэргэжлийн холбооны төлөөлөл",
+              "Цахим мэдээлэлийн инженер",
+            ].map((title, i) => (
+              <div
+                key={i}
+                className="relative p-6 overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-sm md:p-8 rounded-2xl group hover:shadow-xl hover:-translate-y-1"
+              >
+                {/* Gradient border animation */}
+                <div className="absolute inset-0 transition-opacity duration-500 opacity-0 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-blue-400/10 to-purple-400/10 group-hover:opacity-100"></div>
+
+                {/* Subtle glow ring */}
+                <div className="absolute inset-0 transition duration-300 rounded-2xl ring-1 ring-gray-200 group-hover:ring-indigo-400/40"></div>
+
+                {/* Content */}
+                <div className="relative z-10 text-center">
+                  <h3 className="text-lg font-semibold tracking-wide text-gray-900 transition-colors duration-300 md:text-xl group-hover:text-indigo-700">
+                    {title}
+                  </h3>
+                  <div className="w-12 h-1 mx-auto mt-3 transition-all duration-500 rounded-full opacity-0 bg-gradient-to-r from-indigo-500 to-blue-500 group-hover:opacity-100"></div>
+                </div>
               </div>
-              <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-900">
-                Технологич инженер
-              </h3>
-            </div>
-            
-            <div className="group text-center p-4 sm:p-6 md:p-8 rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors duration-200">
-              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-200">
-                🔧
-              </div>
-              <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-900">
-                Механик инженер
-              </h3>
-            </div>
-            
-            <div className="group text-center p-4 sm:p-6 md:p-8 rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors duration-200">
-              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-200">
-                ⚡
-              </div>
-              <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-900">
-                Цахилгааны инженер
-              </h3>
-            </div>
-            
-            <div className="group text-center p-4 sm:p-6 md:p-8 rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors duration-200">
-              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-200">
-                👥
-              </div>
-              <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-900">
-                Мэргэжлийн холбооны төлөөлөл
-              </h3>
-            </div>
-            
-            <div className="group text-center p-4 sm:p-6 md:p-8 rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors duration-200">
-              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-200">
-                💻
-              </div>
-              <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-900">
-                Цахим мэдээлэлийн инженер
-              </h3>
-            </div>
+            ))}
           </div>
+
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="py-12 md:py-16 lg:py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-3 sm:mb-4">Үйл ажиллагаа</h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-500">Багийн гүйцэтгэдэг үндсэн чиг үүрэг</p>
+      <section className="relative py-16 lg:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
+          {/* Section header */}
+          <div className="text-center mb-14">
+            <h2 className="mb-3 text-3xl font-light text-gray-900 md:text-4xl lg:text-5xl">
+              Үйл ажиллагаа
+            </h2>
+            <p className="text-base text-gray-500 md:text-lg">
+              Багийн гүйцэтгэдэг үндсэн чиг үүрэг
+            </p>
+            <div className="w-24 h-1 mx-auto mt-4 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-            <div className="group bg-white rounded-lg md:rounded-xl p-4 sm:p-6 md:p-8 border border-gray-200 hover:border-gray-300 transition-colors duration-200">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-lg sm:text-xl flex-shrink-0">
-                  💼
-                </div>
-                <div>
-                  <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-900 mb-2 sm:mb-3">
-                    Мэргэжлийн зөвлөгөө
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Үйлдвэрүүдэд мэргэжлийн болон технологийн зөвлөгөө өгөх
-                  </p>
-                </div>
-              </div>
-            </div>
+          {/* Card grid */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+            {[
+              {
+                title: "Мэргэжлийн зөвлөгөө",
+                desc: "Үйлдвэрүүдэд мэргэжлийн болон технологийн зөвлөгөө өгөх",
+              },
+              {
+                title: "Технологийн дэмжлэг",
+                desc: "Тоног төхөөрөмжийн үйл ажиллагаанд зөвлөмж өгөх",
+              },
+              {
+                title: "Төрийн бодлого",
+                desc: "Төрийн бодлогын хэрэгжилтийг хангуулах",
+              },
+              {
+                title: "Лабораторийн хяналт",
+                desc: "Лабораторийн хяналтын ажлыг эрчимжүүлэх",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="relative p-6 overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-sm rounded-2xl md:p-8 group hover:shadow-xl hover:-translate-y-1"
+              >
+                {/* Hover gradient overlay */}
+                <div className="absolute inset-0 transition-opacity duration-500 opacity-0 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-blue-400/10 to-purple-400/10 group-hover:opacity-100"></div>
 
-            <div className="group bg-white rounded-lg md:rounded-xl p-4 sm:p-6 md:p-8 border border-gray-200 hover:border-gray-300 transition-colors duration-200">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-lg sm:text-xl flex-shrink-0">
-                  🔬
-                </div>
-                <div>
-                  <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-900 mb-2 sm:mb-3">
-                    Технологийн дэмжлэг
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Тоног төхөөрөмжийн үйл ажиллагаанд зөвлөмж өгөх
-                  </p>
-                </div>
-              </div>
-            </div>
+                {/* Border glow ring */}
+                <div className="absolute inset-0 transition duration-300 rounded-2xl ring-1 ring-gray-200 group-hover:ring-indigo-400/40"></div>
 
-            <div className="group bg-white rounded-lg md:rounded-xl p-4 sm:p-6 md:p-8 border border-gray-200 hover:border-gray-300 transition-colors duration-200">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-lg sm:text-xl flex-shrink-0">
-                  📋
-                </div>
-                <div>
-                  <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-900 mb-2 sm:mb-3">
-                    Төрийн бодлого
+                {/* Content */}
+                <div className="relative z-10">
+                  <h3 className="mb-3 text-lg font-semibold text-gray-900 transition-colors duration-300 md:text-xl group-hover:text-indigo-700">
+                    {item.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Төрийн бодлогын хэрэгжилтийг хангуулах
+                  <p className="text-sm leading-relaxed text-gray-600 md:text-base">
+                    {item.desc}
                   </p>
                 </div>
               </div>
-            </div>
-
-            <div className="group bg-white rounded-lg md:rounded-xl p-4 sm:p-6 md:p-8 border border-gray-200 hover:border-gray-300 transition-colors duration-200">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-lg sm:text-xl flex-shrink-0">
-                  🔍
-                </div>
-                <div>
-                  <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-900 mb-2 sm:mb-3">
-                    Лабораторийн хяналт
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Лабораторийн хяналтын ажлыг эрчимжүүлэх
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
+
     </div>
   );
 }

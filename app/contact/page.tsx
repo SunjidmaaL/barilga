@@ -11,7 +11,47 @@ interface ContactItem {
 
 export default async function ContactPage() {
   const contacts = await getContacts()
-  console.log('Contacts from API:', contacts)
+
+  // Transform API data to expected structure
+  const transformedContacts: ContactItem[] = contacts && Array.isArray(contacts) ? contacts.map((contact: any) => {
+    // Map API fields to our expected structure
+    const contactItems: ContactItem[] = []
+    
+    if (contact.address) {
+      contactItems.push({
+        id: `${contact.id}-address`,
+        label: 'Хаяг',
+        value: contact.address,
+        icon: 'location',
+        iconBgColor: 'bg-indigo-100',
+        iconColor: 'text-indigo-600'
+      })
+    }
+    
+    if (contact.phone) {
+      contactItems.push({
+        id: `${contact.id}-phone`,
+        label: 'Утас',
+        value: contact.phone,
+        icon: 'phone',
+        iconBgColor: 'bg-blue-100',
+        iconColor: 'text-blue-600'
+      })
+    }
+    
+    if (contact.email) {
+      contactItems.push({
+        id: `${contact.id}-email`,
+        label: 'И-мэйл',
+        value: contact.email,
+        icon: 'email',
+        iconBgColor: 'bg-green-100',
+        iconColor: 'text-green-600'
+      })
+    }
+    
+    return contactItems
+  }).flat() : []
 
   // Fallback contact information if API fails
   const fallbackContacts: ContactItem[] = [
@@ -41,8 +81,7 @@ export default async function ContactPage() {
     }
   ]
 
-  const displayContacts = (contacts && Array.isArray(contacts) && contacts.length > 0) ? contacts : fallbackContacts
-  console.log('Display contacts:', displayContacts)
+  const displayContacts = transformedContacts.length > 0 ? transformedContacts : fallbackContacts
 
   return (
     <>
@@ -101,7 +140,6 @@ export default async function ContactPage() {
 
               {/* Team Information */}
               <div className="space-y-4">
-                
                 <div className="grid grid-cols-1 gap-4">
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h4 className="font-semibold text-xs text-gray-900 mb-1">Г.ЦЭРМАА</h4>
