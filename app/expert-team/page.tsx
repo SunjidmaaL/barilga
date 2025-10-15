@@ -5,15 +5,12 @@ export default function ExpertTeamPage() {
       <section className="border-indigo-100 bg-indigo-50 border-y">
         <div className="px-6 mx-auto max-w-7xl py-14">
           <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">Экспертийн багийн ажил</h1>
-          <p className="max-w-3xl mt-3 text-gray-600">
-          Багийн гүйцэтгэдэг үндсэн чиг үүрэг болон үйл ажиллагааг танилцуулна.
-          </p>
         </div>
       </section>
 
 
       {/* Process Control Section */}
-      <section className="relative py-16 lg:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <section className="relative py-8 lg:py-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
         <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
           <div className="overflow-hidden transition-all duration-300 border border-gray-200 shadow-lg bg-white/90 backdrop-blur-md rounded-2xl ">
             {/* Header */}
