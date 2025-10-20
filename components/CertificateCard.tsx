@@ -25,7 +25,6 @@ export default function CertificateCard({
   status = 'received',
   receivedDate
 }: CertificateCardProps) {
-  const [showPdf, setShowPdf] = useState(false)
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
@@ -41,10 +40,10 @@ export default function CertificateCard({
   const formatDateTime = (dateString: string) => {
     if (!dateString) {
       const now = new Date()
-      return `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
+      return `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`
     }
     const date = new Date(dateString)
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
   }
 
   const getStatusText = () => {
@@ -80,13 +79,12 @@ export default function CertificateCard({
   }
 
   return (
-    <>
-      <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 hover:shadow-lg transition-shadow duration-200">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
         <div className="flex items-start space-x-4">
           {/* Certificate Thumbnail - Small Design */}
           <div className="flex-shrink-0">
             <div 
-              className={`w-20 h-28 bg-gradient-to-b from-yellow-50 to-yellow-100 border border-yellow-200 rounded-md shadow-sm relative overflow-hidden cursor-pointer ${
+              className={`w-20 h-28 bg-yellow-50 border border-yellow-200 rounded-md shadow-sm relative overflow-hidden cursor-pointer ${
                 pdfUrl ? 'hover:border-blue-400 hover:shadow-md' : ''
               }`}
               onClick={handlePdfClick}
@@ -200,32 +198,5 @@ export default function CertificateCard({
           </div>
         </div>
       </div>
-
-      {/* PDF Modal */}
-      {showPdf && pdfUrl && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-4xl max-h-[90vh] w-full">
-            <div className="flex justify-between items-center p-4 border-b">
-              <h3 className="text-lg font-semibold">{title}</h3>
-              <button
-                onClick={() => setShowPdf(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-4">
-              <iframe
-                src={pdfUrl}
-                className="w-full h-[70vh] border-0"
-                title={title}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </>
   )
 }

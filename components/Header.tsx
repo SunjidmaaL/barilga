@@ -18,88 +18,69 @@ export default function Header() {
   ]
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur border-b">
-      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-4 sm:p-6 lg:px-8">
-        <div className="flex items-center">
-          <Link href="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">Нүүр хуудас</span>
+    <>
+      <header className="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur border-b">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+          <Link href="/" className="flex items-center">
             <img 
               src="/img/logo.jpg" 
-              alt="Лого" 
-              className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full object-cover shadow-lg border-2 border-indigo-100" 
+              alt="МБМҮХ Лого" 
+              className="h-12 w-12 md:h-14 md:w-14 rounded-full object-cover shadow-md border-2 border-indigo-100" 
             />
           </Link>
-        </div>
-        
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-1 xl:space-x-2">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="px-2 py-2 text-xs xl:text-sm font-semibold text-gray-800 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200 whitespace-nowrap"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
+          
+          <div className="hidden md:flex items-center space-x-2">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="px-3 py-2 text-sm font-semibold text-gray-800 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors whitespace-nowrap"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
 
-        {/* Mobile menu button */}
-        <div className="flex md:hidden">
           <button
-            type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md"
           >
-            <span className="sr-only">Open main menu</span>
-            <svg 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="1.5" 
-              className="size-6"
-            >
-              <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" strokeLinecap="round" strokeLinejoin="round" />
+            <svg className="size-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu - Outside header */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50">
-          {/* Overlay with strong blur */}
+        <div className="md:hidden fixed inset-0 z-[100]">
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-xl transition-all duration-300" 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm" 
             onClick={() => setIsMobileMenuOpen(false)} 
           />
           
-          {/* Menu panel */}
-          <div className="fixed inset-y-0 right-0 w-full max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-sm shadow-2xl transform transition-transform duration-300 ease-in-out">
+          <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl">
             <div className="flex flex-col h-full">
-              {/* Header with close button */}
-              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Цэс</h2>
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-lg font-semibold text-gray-900">Цэс</h2>
                 <button
-                  type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-md p-2 text-gray-800 hover:bg-gray-200 transition-colors"
+                  className="p-2 text-gray-800 hover:bg-gray-100 rounded-md"
                 >
-                  <span className="sr-only">Цэс хаах</span>
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
               
-              {/* Navigation items */}
-              <nav className="flex-1 px-4 sm:px-5 py-6 bg-white/90 backdrop-blur-sm overflow-y-auto">
-                <div className="space-y-1 sm:space-y-2">
+              <nav className="flex-1 p-4 overflow-y-auto">
+                <div className="space-y-2">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="block px-3 py-2 sm:py-3 text-sm sm:text-base font-medium text-gray-900 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-all duration-200 border border-transparent hover:border-indigo-200"
+                      className="block px-3 py-3 text-base font-medium text-gray-900 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
@@ -111,6 +92,6 @@ export default function Header() {
           </div>
         </div>
       )}
-    </header>
+    </>
   )
 }

@@ -1,4 +1,4 @@
-import { getContacts } from '@/lib/strapi'
+import { getContacts, getContactsHrs } from '@/lib/strapi'
 
 interface ContactItem {
   id?: string | number
@@ -11,10 +11,11 @@ interface ContactItem {
 
 export default async function ContactPage() {
   const contacts = await getContacts()
+  const contactsHrs = await getContactsHrs()
+  
 
   // Transform API data to expected structure
   const transformedContacts: ContactItem[] = contacts && Array.isArray(contacts) ? contacts.map((contact: any) => {
-    // Map API fields to our expected structure
     const contactItems: ContactItem[] = []
     
     if (contact.address) {
@@ -53,7 +54,7 @@ export default async function ContactPage() {
     return contactItems
   }).flat() : []
 
-  // Fallback contact information if API fails
+  // Fallback contact information
   const fallbackContacts: ContactItem[] = [
     {
       id: 'fallback-1',
@@ -141,40 +142,61 @@ export default async function ContactPage() {
               {/* Team Information */}
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-xs text-gray-900 mb-1">Г.ЦЭРМАА</h4>
-                    <p className="text-xs text-gray-600 leading-snug">Барилгын материалын үйлдвэрлэлийн холбооны гүйцэтгэх захирал</p>
-                    <p className="text-xs text-gray-600 leading-snug">УТАС: 99015759</p>
-                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-xs text-gray-900 mb-1">М.УЛААНХҮҮХЭН</h4>
-                    <p className="text-xs text-gray-600 leading-snug">Барилгын материалын үйлдвэрийн тусгай зөвшөөрөл хариуцсан мэргэжилтэн</p>
-                    <p className="text-xs text-gray-600 leading-snug">УТАС: 99143658</p>
-                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-xs text-gray-900 mb-1">Г.ХИШИГЖАРГАЛ</h4>
-                    <p className="text-xs text-gray-600 leading-snug">Оффис менежер</p>
-                    <p className="text-xs text-gray-600 leading-snug">УТАС: 95953178</p>
-                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-xs text-gray-900 mb-1">Б.ПҮРЭВСҮРЭН</h4>
-                    <p className="text-xs text-gray-600 leading-snug">Гадаад харилцааны менежер</p>
-                    <p className="text-xs text-gray-600 leading-snug">УТАС: 99156327</p>
-                    <p className="text-xs text-gray-600 leading-snug">ФАКС: 976-11-316253</p>
-                  </div>
+                  {contactsHrs && Array.isArray(contactsHrs) && contactsHrs.length > 0 && contactsHrs
+                    .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+                    .map((contactHr: any, index: number) => (
+                    <div key={contactHr.id || index} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-sm text-gray-900 mb-1">
+                            {contactHr.name || 'Нэр олдоогүй'}
+                          </h4>
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            {contactHr.position || 'Албан тушаал олдоогүй'}
+                          </p>
+                        </div>
+                        <div className="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center ml-3 flex-shrink-0">
+                          <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        {contactHr.phone && (
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                              <svg className="w-2.5 h-2.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                              </svg>
+                            </div>
+                            <span className="text-xs text-gray-600">
+                              <span className="font-medium text-gray-700">УТАС:</span> {contactHr.phone}
+                            </span>
+                          </div>
+                        )}
+                        {contactHr.fax && (
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                              <svg className="w-2.5 h-2.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                            </div>
+                            <span className="text-xs text-gray-600">
+                              <span className="font-medium text-gray-700">ФАКС:</span> {contactHr.fax}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Map */}
             <div className="bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg">
-              <div className="h-[550px] sm:h-[650px] lg:h-[750px]">
+              <div className="h-[550px] sm:h-[650px] lg:h-[880px]">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3289.666352511148!2d106.90693059211164!3d47.92658319163034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5d96930012bdd359%3A0x707c29cf12cab3f4!2z0JLQvtGP0LYg0L7RhNGE0LjRgQ!5e1!3m2!1sen!2sus!4v1760319969441!5m2!1sen!2sus"
                   width="100%"

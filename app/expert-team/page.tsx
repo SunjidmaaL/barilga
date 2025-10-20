@@ -1,179 +1,245 @@
 export default function ExpertTeamPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="border-indigo-100 bg-indigo-50 border-y">
-        <div className="px-6 mx-auto max-w-7xl py-14">
-          <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">Экспертийн багийн ажил</h1>
+      <section className="bg-indigo-50 border-y border-indigo-100">
+        <div className="max-w-7xl mx-auto px-6 py-14">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Экспертийн багийн ажил</h1>
+          <p className="mt-3 text-gray-600 max-w-3xl">
+            Барилгын материалын үйлдвэрлэлийн чанар, аюулгүй байдлыг хангах мэргэжлийн баг
+          </p>
         </div>
       </section>
 
+      {/* Main Content */}
+      <section className="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Process Control Section */}
+        <div className="bg-white rounded-xl p-8 shadow ring-1 ring-gray-200 mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            ПРОЦЕССИЙН ХЯНАЛТ
+          </h2>
 
-      {/* Process Control Section */}
-      <section className="relative py-8 lg:py-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
-        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
-          <div className="overflow-hidden transition-all duration-300 border border-gray-200 shadow-lg bg-white/90 backdrop-blur-md rounded-2xl ">
-            {/* Header */}
-            <div className="relative py-6 text-center bg-gradient-to-r to-indigo-400 via-blue-400 from-indigo-400 md:py-8">
-              <h2 className="text-2xl font-light tracking-wide text-white md:text-3xl lg:text-4xl drop-shadow-md">
-                ПРОЦЕССИЙН ХЯНАЛТ
-              </h2>
-              <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-indigo-400 via-blue-400 to-indigo-400"></div>
+          {/* Introduction */}
+          <div className="bg-indigo-50 rounded-xl p-6 mb-8 border-l-4 border-indigo-500">
+            <p className="text-base md:text-lg leading-relaxed text-gray-700">
+              <span className="font-semibold text-indigo-900">МБМҮХолбоо</span> нь 
+              <span className="font-semibold text-indigo-700"> 2012 оноос хойш</span> барилгын материалын үйлдвэрлэлд 
+              тусгай зөвшөөрөл олгох эс олгох ажлын хүрээнд хамгийн үр дүнтэй зохион байгуулалтанд 
+              оруулж үйлдвэрүүдээр{" "}
+              <span className="font-semibold text-indigo-800 bg-indigo-100 px-2 py-1 rounded">"ЗӨВЛӨХ МЭРГЭЖЛИЙН БАГ"</span>{" "}
+              ажиллуулж эхлэсэн болно.
+            </p>
+          </div>
+
+          {/* Working Process */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-8 h-8 bg-blue-200 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg className="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Ажиллах журам</h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    "Экспертийн мэргэжлийн баг"-ийн ажиллах журмыг дотооддоо батлуулан 
+                    мэргэжлийн инженер, зөвлөхүүдийг ажиллуулдаг.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Main content */}
-            <div className="p-6 sm:p-8 md:p-12">
-              {/* Intro paragraph */}
-              <div className="p-6 mb-12 transition-transform duration-300 border-l-4 border-indigo-700 shadow-sm bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl md:p-8 ">
-                <p className="text-base leading-relaxed text-gray-700 md:text-lg">
-                  <span className="font-semibold text-gray-900">МБМҮХолбоо</span> нь
-                  <span className="font-semibold"> 2012 оноос хойш</span> барилгын материалын үйлдвэрлэлд
-                  тусгай зөвшөөрөл олгох эс олгох ажлын хүрээнд хамгийн үр дүнтэй зохион байгуулалтанд
-                  оруулж үйлдвэрүүдээр{" "}
-                  <span className="font-semibold text-indigo-700">"ЗӨВЛӨХ МЭРГЭЖЛИЙН БАГ"</span>
-                  ажиллуулж эхлэсэн болно.
-                </p>
-              </div>
-
-              {/* Cards */}
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                {[
-                  {
-                    title: "Ажиллах журам",
-                    desc: `"Экспертийн мэргэжлийн баг"-ийн ажиллах журмыг дотооддоо батлуулан
-              мэргэжлийн инженер, зөвлөхүүдийг ажиллуулдаг.`,
-                  },
-                  {
-                    title: "Хамтын ажиллагаа",
-                    desc: `Тус мэргэжлийн баг нь үйлдвэрүүдэд мэргэжлийн зөвлөгөө өгөх,
-              зөвлөмж өгч хамтын ажиллагаа, эргэх холбоог бий болгодог болно.`,
-                  },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="relative p-6 overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-sm rounded-2xl md:p-8 group hover:shadow-xl hover:-translate-y-1"
-                  >
-                    {/* Hover gradient overlay */}
-                    <div className="absolute inset-0 transition-opacity duration-500 opacity-0 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-blue-400/10 to-purple-400/10 group-hover:opacity-100"></div>
-
-                    {/* Border glow ring */}
-                    <div className="absolute inset-0 transition duration-300 rounded-2xl ring-1 ring-gray-200 group-hover:ring-indigo-400/40"></div>
-
-                    {/* Content */}
-                    <div className="relative z-10">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900 transition-colors duration-300 md:text-xl group-hover:text-indigo-700">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-gray-600 md:text-base">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
+            <div className="bg-green-50 rounded-xl p-6 border-l-4 border-green-500">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-8 h-8 bg-green-200 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg className="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-green-900 mb-2">Хамтын ажиллагаа</h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    Үйлдвэрүүдэд мэргэжлийн зөвлөгөө өгөх, зөвлөмж өгч хамтын ажиллагаа, 
+                    эргэх холбоог бий болгодог.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
+        {/* Team Members Section */}
+        <div className="bg-white rounded-xl p-8 shadow ring-1 ring-gray-200 mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            Багийн бүрэлдэхүүн
+          </h2>
 
-      {/* Team Members Section */}
-      <section className="py-12 bg-white md:py-16 lg:py-20">
-        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
-          <div className="mb-12 text-center md:mb-16">
-            <h2 className="mb-3 text-2xl font-light text-gray-900 sm:text-3xl md:text-4xl lg:text-5xl sm:mb-4">Багийн бүрэлдэхүүн</h2>
-            <p className="text-sm text-gray-500 sm:text-base md:text-lg">Мэргэжлийн инженер, зөвлөхүүд</p>
-          </div>
+          <p className="text-gray-600 mb-6">
+            Мэргэжлийн инженер, зөвлөхүүдийн бүрэлдэхүүн:
+          </p>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              "Технологич инженер",
-              "Механик инженер",
-              "Цахилгааны инженер",
-              "Мэргэжлийн холбооны төлөөлөл",
-              "Цахим мэдээлэлийн инженер",
-            ].map((title, i) => (
+              { 
+                title: "Технологич инженер",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                ),
+                color: "bg-blue-100 text-blue-700"
+              },
+              { 
+                title: "Механик инженер",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                  </svg>
+                ),
+                color: "bg-green-100 text-green-700"
+              },
+              { 
+                title: "Цахилгааны инженер",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                ),
+                color: "bg-yellow-100 text-yellow-700"
+              },
+              { 
+                title: "Холбооны төлөөлөл",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                ),
+                color: "bg-purple-100 text-purple-700"
+              },
+              { 
+                title: "Цахим мэдээлэлийн инженер",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                ),
+                color: "bg-indigo-100 text-indigo-700"
+              },
+              { 
+                title: "Бусад мэргэжлийн баг",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                ),
+                color: "bg-pink-100 text-pink-700"
+              },
+            ].map((member, i) => (
               <div
                 key={i}
-                className="relative p-6 overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-sm md:p-8 rounded-2xl group hover:shadow-xl hover:-translate-y-1"
+                className="group bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:scale-105"
               >
-                {/* Gradient border animation */}
-                <div className="absolute inset-0 transition-opacity duration-500 opacity-0 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-blue-400/10 to-purple-400/10 group-hover:opacity-100"></div>
-
-                {/* Subtle glow ring */}
-                <div className="absolute inset-0 transition duration-300 rounded-2xl ring-1 ring-gray-200 group-hover:ring-indigo-400/40"></div>
-
-                {/* Content */}
-                <div className="relative z-10 text-center">
-                  <h3 className="text-lg font-semibold tracking-wide text-gray-900 transition-colors duration-300 md:text-xl group-hover:text-indigo-700">
-                    {title}
-                  </h3>
-                  <div className="w-12 h-1 mx-auto mt-3 transition-all duration-500 rounded-full opacity-0 bg-gradient-to-r from-indigo-500 to-blue-500 group-hover:opacity-100"></div>
+                <div className={`w-12 h-12 ${member.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  {member.icon}
                 </div>
+                <h3 className="text-base font-semibold text-gray-900">
+                  {member.title}
+                </h3>
               </div>
             ))}
           </div>
-
         </div>
-      </section>
 
-      {/* Services Section */}
-      <section className="relative py-16 lg:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-100">
-        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
-          {/* Section header */}
-          <div className="text-center mb-14">
-            <h2 className="mb-3 text-3xl font-light text-gray-900 md:text-4xl lg:text-5xl">
-              Үйл ажиллагаа
-            </h2>
-            <p className="text-base text-gray-500 md:text-lg">
-              Багийн гүйцэтгэдэг үндсэн чиг үүрэг
-            </p>
-            <div className="w-24 h-1 mx-auto mt-4 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500"></div>
-          </div>
+        {/* Services Section */}
+        <div className="bg-white rounded-xl p-8 shadow ring-1 ring-gray-200">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+            </div>
+            Үйл ажиллагааны чиглэл
+          </h2>
 
-          {/* Card grid */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          <p className="text-gray-600 mb-6">
+            Тус мэргэжлийн баг нь үйлдвэрүүдэд дараах үйл ажиллагаа, үйлчилгээг үзүүлдэг:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
                 title: "Мэргэжлийн зөвлөгөө",
                 desc: "Үйлдвэрүүдэд мэргэжлийн болон технологийн зөвлөгөө өгөх",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                ),
+                color: "from-blue-500 to-blue-600"
               },
               {
                 title: "Технологийн дэмжлэг",
                 desc: "Тоног төхөөрөмжийн үйл ажиллагаанд зөвлөмж өгөх",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                ),
+                color: "from-green-500 to-green-600"
               },
               {
-                title: "Төрийн бодлого",
+                title: "Төрийн бодлогын хэрэгжилт",
                 desc: "Төрийн бодлогын хэрэгжилтийг хангуулах",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                ),
+                color: "from-purple-500 to-purple-600"
               },
               {
                 title: "Лабораторийн хяналт",
                 desc: "Лабораторийн хяналтын ажлыг эрчимжүүлэх",
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                  </svg>
+                ),
+                color: "from-orange-500 to-orange-600"
               },
             ].map((item, i) => (
               <div
                 key={i}
-                className="relative p-6 overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-sm rounded-2xl md:p-8 group hover:shadow-xl hover:-translate-y-1"
+                className="group bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                {/* Hover gradient overlay */}
-                <div className="absolute inset-0 transition-opacity duration-500 opacity-0 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-blue-400/10 to-purple-400/10 group-hover:opacity-100"></div>
-
-                {/* Border glow ring */}
-                <div className="absolute inset-0 transition duration-300 rounded-2xl ring-1 ring-gray-200 group-hover:ring-indigo-400/40"></div>
-
-                {/* Content */}
-                <div className="relative z-10">
-                  <h3 className="mb-3 text-lg font-semibold text-gray-900 transition-colors duration-300 md:text-xl group-hover:text-indigo-700">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-gray-600 md:text-base">
-                    {item.desc}
-                  </p>
+                <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-lg flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform`}>
+                  {item.icon}
                 </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {item.desc}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
-
     </div>
   );
 }

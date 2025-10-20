@@ -145,14 +145,15 @@ export default function NewsDetailPage() {
   const content = attributes?.content || description
   const publishedAt = attributes?.publishedAt || attributes?.createdAt || ''
   const image = attributes?.image
-  const imageUrl = image?.data?.attributes?.url
-  const imageAlt = image?.data?.attributes?.alternativeText || title
+  const imageUrl = image?.data?.attributes?.url || image?.url
+  const imageAlt = image?.data?.attributes?.alternativeText || image?.alternativeText || title
   
   // Format date
   const formattedDate = formatDate(publishedAt)
   
   // Fallback image URL
-  const fallbackImage = '/img/background.jpg'
+  const fallbackImage = '/img/news-placeholder.svg'
+  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -171,15 +172,12 @@ export default function NewsDetailPage() {
         </div>
 
         {/* Article */}
-        <article className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <article className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* Image */}
           <div className="aspect-[16/9] w-full relative bg-gray-100 overflow-hidden">
             <img 
               className="w-full h-full object-cover" 
-              src={imageUrl 
-                ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com/'}${imageUrl}`
-                : fallbackImage
-              }
+              src={imageUrl ? `${strapiUrl}${imageUrl}` : fallbackImage}
               alt={imageAlt || title}
             />
           </div>
@@ -199,11 +197,8 @@ export default function NewsDetailPage() {
             
             {/* Content */}
             {content && content !== description && (
-              <div className="prose prose-lg max-w-none">
-                <div 
-                  className="text-gray-700 leading-relaxed whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
+              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                {content}
               </div>
             )}
           </div>

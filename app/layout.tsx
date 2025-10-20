@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   description: 'Барилгын салбарын хөгжлийг дэмжих, чанартай материал үйлдвэрлэгчдийн нэгдсэн холбоо',
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -21,7 +27,7 @@ export default function RootLayout({
     <html lang="mn">
       <body className={inter.className}>
         <Header />
-        <main className="pt-16 sm:pt-20 md:pt-24">
+        <main className="pt-20">
           {children}
         </main>
         <Footer />

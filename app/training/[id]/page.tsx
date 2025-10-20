@@ -155,20 +155,17 @@ export default function TrainingDetailPage() {
   const image = attributes?.image
   
   // Get image URL from Strapi structure
+  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
   let imageUrl = '/img/training1.jpg'
   let imageAlt = title
   
   if (image && 'data' in image && image.data?.attributes?.url) {
     const url = image.data.attributes.url
-    imageUrl = url.startsWith('http') 
-      ? url 
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${url}`
+    imageUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`
     imageAlt = image.data.attributes.alternativeText || title
   } else if (image && 'url' in image && image.url) {
     const url = image.url
-    imageUrl = url.startsWith('http')
-      ? url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${url}`
+    imageUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`
     imageAlt = image.alternativeText || title
   }
   
@@ -192,7 +189,7 @@ export default function TrainingDetailPage() {
         </div>
 
         {/* Article */}
-        <article className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <article className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* Image */}
           <div className="aspect-[16/9] w-full relative bg-gray-100 overflow-hidden">
             <img 
@@ -246,11 +243,8 @@ export default function TrainingDetailPage() {
             
             {/* Content */}
             {content && content !== description && (
-              <div className="prose prose-lg max-w-none">
-                <div 
-                  className="text-gray-700 leading-relaxed whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
+              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                {content}
               </div>
             )}
           </div>

@@ -7,7 +7,7 @@ function TrainingLoading() {
   return (
     <section className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[...Array(6)].map((_, i) => (
-        <div key={i} className="rounded-xl bg-white p-6 shadow ring-1 ring-gray-200 animate-pulse">
+        <div key={i} className="rounded-xl bg-white p-6 shadow-sm border border-gray-200 animate-pulse">
           <div className="h-4 bg-gray-200 rounded w-32 mb-3"></div>
           <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
           <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
@@ -29,12 +29,37 @@ async function TrainingContent() {
 export default function TrainingPage() {
   return (
     <>
-      <section className="bg-indigo-50 border-y border-indigo-100">
-        <div className="max-w-7xl mx-auto px-6 py-14">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Сургалт</h1>
-          <p className="mt-3 text-gray-600 max-w-3xl">
-            Мэргэжлийн үнэмлэх олгох сургалтууд
-          </p>
+
+      {/* BMUS Intro */}
+      <section className="max-w-7xl mx-auto px-6 pt-10">
+        <div className="rounded-xl bg-white p-8 shadow ring-1 ring-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0112 21.5 12.083 12.083 0 015.84 10.578L12 14z" />
+              </svg>
+            </div>
+            МБМҮХолбооны дэргэдэх сургалтын "БМҮС" ХХК
+          </h2>
+
+          <div className="space-y-6 text-gray-700 leading-relaxed">
+            <p>
+              МБМҮХолбооны дэргэдэх сургалтын “БМҮС” ХХК нь 2010 оноос эхлэн барилгын материалын үйлдвэрийн
+              мэргэжилтэй ажилчин бэлтгэх сургалтыг зохион байгуулж байна. Тус сургалтын төв нь хот, хөдөөгийн
+              ажил олгогч байгууллага, хөдөлмөрийн хэлтэсүүдтэй хамтран <span className="font-medium text-gray-900">чадамжинд суурилсан сургалтын хөтөлбөрийг</span>
+              Барилгын материалын үйлдвэрлэлийн мэргэжлийн чиглэлээр боловсруулан хэрэгжүүлж байна.
+            </p>
+
+            <div className="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Үндсэн мэргэжлүүд</h3>
+              <ul className="list-disc list-inside space-y-2 text-gray-700">
+                <li>БМҮ-ийн тоног төхөөрөмжийн оператор</li>
+                <li>БМҮ-ийн тоног төхөөрөмжийн засварчин</li>
+                <li>БМҮ-ийн техник лаборант</li>
+                <li>Хөдөлмөрийн аюулгүй байдал, эрүүл ахуйн сургалт</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
