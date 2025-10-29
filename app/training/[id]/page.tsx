@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { getTrainings } from '@/lib/strapi'
 import Link from 'next/link'
+import TrainingRegistrationModal from '@/components/TrainingRegistrationModal'
 
 interface Training {
   id: number
@@ -55,6 +56,7 @@ export default function TrainingDetailPage() {
   const [training, setTraining] = useState<Training | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const loadTraining = async () => {

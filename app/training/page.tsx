@@ -29,7 +29,6 @@ async function TrainingContent() {
 export default function TrainingPage() {
   return (
     <>
-
       {/* BMUS Intro */}
       <section className="max-w-7xl mx-auto px-6 pt-10">
         <div className="rounded-xl bg-white p-8 shadow ring-1 ring-gray-200">
@@ -42,9 +41,9 @@ export default function TrainingPage() {
             МБМҮХолбооны дэргэдэх сургалтын "БМҮС" ХХК
           </h2>
 
-          <div className="space-y-6 text-gray-700 leading-relaxed">
+          <div className="space-y-6 text-gray-700 text-justify leading-relaxed">
             <p>
-              МБМҮХолбооны дэргэдэх сургалтын “БМҮС” ХХК нь 2010 оноос эхлэн барилгын материалын үйлдвэрийн
+              МБМҮХолбооны дэргэдэх сургалтын "БМҮС" ХХК нь 2010 оноос эхлэн барилгын материалын үйлдвэрийн
               мэргэжилтэй ажилчин бэлтгэх сургалтыг зохион байгуулж байна. Тус сургалтын төв нь хот, хөдөөгийн
               ажил олгогч байгууллага, хөдөлмөрийн хэлтэсүүдтэй хамтран <span className="font-medium text-gray-900">чадамжинд суурилсан сургалтын хөтөлбөрийг</span>
               Барилгын материалын үйлдвэрлэлийн мэргэжлийн чиглэлээр боловсруулан хэрэгжүүлж байна.

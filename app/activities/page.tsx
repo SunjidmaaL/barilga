@@ -60,7 +60,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
 
       {/* About & Goals Combined Section */}
-      <section className="py-12 md:py-20 px-4">
+      <section className="py-12 md:py-10 px-4">
         <div className="max-w-6xl mx-auto">
           {/* About */}
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border-t-4 border-blue-500 hover:shadow-2xl transition-shadow duration-300">
@@ -71,7 +71,7 @@ export default function AboutPage() {
               </h2>
             </div>
             
-            <div className="space-y-4 text-gray-700 leading-relaxed text-sm md:text-base mb-10">
+            <div className="space-y-4 text-gray-700 leading-relaxed text-sm md:text-base mb-10 text-justify">
               <p className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
                 Монголын Барилгын Материал Үйлдвэрлэгчдийн Холбоо нь 2003 онд байгуулагдсан, 
                 барилгын материалын чиглэлээр үйл ажиллагаа эрхэлдэг мэргэжлийн төрийн бус байгууллага болно. 

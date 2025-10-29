@@ -93,7 +93,7 @@ export default function HeroSlider() {
         {displaySlides.map((slide) => (
           <SwiperSlide key={slide.id} className="h-full">
             <div 
-              className="relative w-full h-full min-h-[60vh] md:min-h-[80vh] bg-cover bg-center transition-opacity duration-500"
+              className="relative w-full h-full min-h-[60vh] md:min-h-[80vh] bg-cover bg-center transition-opacity duration-500 "
               style={{ backgroundImage: `url(${getImageUrl(slide)})` }}
             >
               <div className="absolute inset-0 bg-black/40" />

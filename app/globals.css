@@ -12,6 +12,18 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
+/* Favicon бөөрөнхий хэлбэрт оруулах */
+link[rel="icon"] {
+  border-radius: 50% !important;
+  overflow: hidden;
+}
+
+/* Browser дээрх favicon-ийг бөөрөнхий болгох */
+.favicon-round {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
 /* Facebook Messenger Chat */
 .fb-customerchat {
   position: fixed !important;

@@ -94,18 +94,36 @@ export default function TrainingAnnouncements() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {trainings.map((training) => {
+        // Handle both Strapi v4 structure (attributes) and direct structure
+        // Support nested attributes as well as flat structure
         const attrs = training.attributes || training
-        const date = attrs?.date || attrs?.createdAt || ''
-        const location = attrs?.location || ''
+        
+        // Get title - check both attributes.title and training.title
+        const title = attrs?.title || training.title || 'Untitled Training'
+        
+        // Get description - check both attributes.description and training.description
+        const description = attrs?.description || training.description || 'No description available'
+        
+        // Get date - check multiple possible locations
+        const date = attrs?.date || training.date || attrs?.createdAt || training.createdAt || ''
+        
+        // Get location
+        const location = attrs?.location || training.location || ''
         const dateLocation = [formatDate(date), location].filter(Boolean).join(' • ')
         
-        const image = attrs?.image
+        // Get price
+        const price = attrs?.price || training.price
+        
+        // Get image - handle Strapi image structure
+        const image = attrs?.image || training.image
         let imageUrl = '/img/training1.jpg'
         
         if (image && 'data' in image && image.data?.attributes?.url) {
-          imageUrl = `${strapiUrl}${image.data.attributes.url}`
+          const url = image.data.attributes.url
+          imageUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`
         } else if (image && 'url' in image && image.url) {
-          imageUrl = `${strapiUrl}${image.url}`
+          const url = image.url
+          imageUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`
         }
         
         return (
@@ -115,7 +133,7 @@ export default function TrainingAnnouncements() {
                 <img 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
                   src={imageUrl}
-                  alt={attrs?.title || 'Training'}
+                  alt={title}
                   onError={(e) => e.currentTarget.src = '/img/training1.jpg'}
                 />
               </div>
@@ -125,14 +143,14 @@ export default function TrainingAnnouncements() {
                   {dateLocation || 'Огноо тодорхойгүй'}
                 </p>
                 <h4 className="mt-1 text-lg font-semibold text-gray-900 line-clamp-2">
-                  {attrs?.title || 'Untitled Training'}
+                  {title}
                 </h4>
                 <p className="mt-2 text-gray-600 text-sm line-clamp-3">
-                  {attrs?.description || 'No description available'}
+                  {description}
                 </p>
-                {attrs?.price && (
+                {price && (
                   <div className="mt-3 text-sm font-medium text-indigo-600">
-                    Үнэ: {attrs.price.toLocaleString()}₮
+                    Үнэ: {price.toLocaleString()}₮
                   </div>
                 )}
                 <div className="mt-3 flex justify-end items-center text-xs">

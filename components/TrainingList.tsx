@@ -59,15 +59,19 @@ export default function TrainingList({ trainings }: TrainingListProps) {
   return (
     <section className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {trainings.map((training) => {
+        // Handle both Strapi v4 structure (attributes) and direct structure
         const attrs = training.attributes || training
-        const title = attrs.title || training.title
-        const description = attrs.description || training.description
-        const date = attrs.date || training.date
-        const location = attrs.location || training.location
-        const price = attrs.price || training.price
         
-        const image = attrs.image || training.image
-        let imageUrl = '/img/training1.jpg'
+        // Get all fields with fallbacks for both structures
+        const title = attrs?.title || training.title || 'Untitled Training'
+        const description = attrs?.description || training.description || 'No description available'
+        const date = attrs?.date || training.date || ''
+        const location = attrs?.location || training.location || ''
+        const price = attrs?.price || training.price
+        
+        // Get image - handle Strapi image structure
+        const image = attrs?.image || training.image
+        let imageUrl = '/img/background.jpg'
         
         if (image && 'data' in image && image.data?.attributes?.url) {
           const url = image.data.attributes.url
@@ -85,7 +89,7 @@ export default function TrainingList({ trainings }: TrainingListProps) {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
                   src={imageUrl}
                   alt={title || 'Сургалт'}
-                  onError={(e) => e.currentTarget.src = '/img/training1.jpg'}
+                  onError={(e) => e.currentTarget.src = '/img/background1.jpg'}
                 />
               </div>
               

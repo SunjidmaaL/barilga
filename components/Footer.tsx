@@ -22,7 +22,7 @@ export default async function Footer() {
           <div className="text-center sm:text-left">
             <h5 className="font-bold mb-2 sm:mb-3 text-white text-base sm:text-lg">Сошиал</h5>
             <a 
-              href="https://www.facebook.com/profile.php?id=100063558767319" 
+              href="https://www.facebook.com/bmat.mn" 
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block hover:opacity-80 transition-opacity"

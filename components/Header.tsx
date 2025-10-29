@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   const navigation = [
     { name: 'Нүүр', href: '/' },
@@ -17,10 +19,17 @@ export default function Header() {
     { name: 'Холбоо барих', href: '/contact' },
   ]
 
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/'
+    }
+    return pathname.startsWith(href)
+  }
+
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur border-b">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8 ">
           <Link href="/" className="flex items-center">
             <img 
               src="/img/logo.jpg" 
@@ -29,12 +38,16 @@ export default function Header() {
             />
           </Link>
           
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="hidden md:flex items-center space-x-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="px-3 py-2 text-sm font-semibold text-gray-800 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors whitespace-nowrap"
+                className={`px-3 py-2 text-sm font-bold rounded transition-colors whitespace-nowrap ${
+                  isActive(item.href)
+                    ? 'text-indigo-600'
+                    : 'text-gray-600 hover:text-indigo-600'
+                }`}
               >
                 {item.name}
               </Link>
@@ -75,12 +88,16 @@ export default function Header() {
               </div>
               
               <nav className="flex-1 p-4 overflow-y-auto">
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="block px-3 py-3 text-base font-medium text-gray-900 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-colors"
+                      className={`block px-3 py-2 text-base font-bold rounded transition-colors ${
+                        isActive(item.href)
+                          ? 'text-indigo-600'
+                          : 'text-gray-700 hover:text-indigo-600'
+                      }`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
