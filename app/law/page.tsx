@@ -8,10 +8,34 @@ interface LawData {
   description?: string
   content?: string
   publishedAt?: string
+  documentId?: string
   document?: {
-    url: string
+    url?: string
     name?: string
     mime?: string
+    data?: {
+      url?: string
+      attributes?: {
+        url: string
+        name?: string
+        mime?: string
+      }
+    }
+  }
+  file?: {
+    url?: string
+    name?: string
+    mime?: string
+    id?: number
+    documentId?: string
+    data?: {
+      url?: string
+      attributes?: {
+        url: string
+        name?: string
+        mime?: string
+      }
+    }
   }
   attributes?: {
     title?: string
@@ -19,8 +43,26 @@ interface LawData {
     content?: string
     publishedAt?: string
     date?: string
+    documentId?: string
     document?: {
+      url?: string
       data?: {
+        url?: string
+        attributes?: {
+          url: string
+          name?: string
+          mime?: string
+        }
+      }
+    }
+    file?: {
+      url?: string
+      name?: string
+      mime?: string
+      id?: number
+      documentId?: string
+      data?: {
+        url?: string
         attributes?: {
           url: string
           name?: string
@@ -87,6 +129,76 @@ function LawLoading() {
       </div>
     </section>
   )
+}
+
+// Helper function to get document URL from various Strapi structures
+function getDocumentUrl(law: LawData): string {
+  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+  
+  // Priority 1: Check for 'file' field (common in populated Strapi responses)
+  // Structure 1: attributes.file.url (most common - direct file URL)
+  if (law.attributes?.file?.url) {
+    const url = law.attributes.file.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Structure 2: file.url (direct structure)
+  if (law.file?.url) {
+    const url = law.file.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Structure 3: attributes.file.data.attributes.url (nested populated relation)
+  if (law.attributes?.file?.data?.attributes?.url) {
+    const url = law.attributes.file.data.attributes.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Structure 4: file.data.attributes.url (nested structure)
+  if (law.file?.data?.attributes?.url) {
+    const url = law.file.data.attributes.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Priority 2: Check for 'document' field (alternative naming)
+  // Structure 5: attributes.document.data.attributes.url (populated relation)
+  if (law.attributes?.document?.data?.attributes?.url) {
+    const url = law.attributes.document.data.attributes.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Structure 6: attributes.document.data.url (alternative structure)
+  if (law.attributes?.document?.data?.url) {
+    const url = law.attributes.document.data.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Structure 7: document.url (direct structure)
+  if (law.document?.url) {
+    const url = law.document.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Structure 8: attributes.document.url (alternative)
+  if (law.attributes?.document?.url) {
+    const url = law.attributes.document.url
+    return url.startsWith('http') ? url : `${strapiUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+  
+  // Priority 3: Fallback to file ID from file object
+  const fileId = law.attributes?.file?.id || law.file?.id || law.attributes?.file?.documentId || law.file?.documentId
+  if (fileId) {
+    // Use the file's documentId for upload/files endpoint
+    return `${strapiUrl}/api/upload/files/${fileId}`
+  }
+  
+  // Priority 4: Fallback to documentId
+  const documentId = law.attributes?.documentId || law.documentId
+  if (documentId) {
+    return `${strapiUrl}/api/upload/files/${documentId}`
+  }
+  
+  return '#'
 }
 
 // Law content component
@@ -349,12 +461,9 @@ async function LawContent() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {lawsData.map((law, index) => {
-                    // Get document URL from Strapi structure
-                    const documentUrl = law.attributes?.document?.data?.attributes?.url
-                      ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${law.attributes.document.data.attributes.url}`
-                      : law.document?.url 
-                      ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${law.document.url}`
-                      : '#'
+                    // Get document URL from Strapi structure using helper function
+                    const documentUrl = getDocumentUrl(law)
+                    const documentId = law.attributes?.documentId || law.documentId
 
                     const title = law.attributes?.title || law.title || 'Хууль эрх зүйн баримт'
                     // Strapi-ийн date талбарыг ашиглах (publishedAt биш)
@@ -408,9 +517,8 @@ async function LawContent() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           <a 
-                            href={documentUrl} 
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={documentUrl !== '#' ? `/api/download?url=${encodeURIComponent(documentUrl)}` : (documentId ? `/api/download?id=${encodeURIComponent(documentId)}` : '#')}
+                            download
                             className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
                           >
                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -430,12 +538,9 @@ async function LawContent() {
           {/* Mobile Card View */}
           <div className="md:hidden space-y-3 sm:space-y-4 mb-6 sm:mb-8">
             {lawsData.map((law, index) => {
-              // Get document URL from Strapi structure
-              const documentUrl = law.attributes?.document?.data?.attributes?.url
-                ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${law.attributes.document.data.attributes.url}`
-                : law.document?.url 
-                ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${law.document.url}`
-                : '#'
+              // Get document URL from Strapi structure using helper function
+              const documentUrl = getDocumentUrl(law)
+              const documentId = law.attributes?.documentId || law.documentId
 
               const title = law.attributes?.title || law.title || 'Хууль эрх зүйн баримт'
               // Strapi-ийн date талбарыг ашиглах (publishedAt биш)
@@ -491,9 +596,8 @@ async function LawContent() {
                   </div>
                   <div className="mt-2 sm:mt-3">
                     <a 
-                      href={documentUrl} 
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={documentUrl !== '#' ? `/api/download?url=${encodeURIComponent(documentUrl)}` : (documentId ? `/api/download?id=${encodeURIComponent(documentId)}` : '#')}
+                      download
                       className="inline-flex items-center justify-center w-full px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
                     >
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
