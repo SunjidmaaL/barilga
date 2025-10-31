@@ -63,12 +63,12 @@ export default async function ContactPage() {
   return (
     <>
       {/* Contact Information & Map Section */}
-      <section className="bg-white pt-0 pb-8 sm:pt-0 sm:pb-12 lg:pt-0 lg:pb-16">
+      <section className="bg-white pt-0 pb-6 sm:pb-8 md:pb-12 lg:pb-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-12 lg:mb-16">     
+          <div className="mx-auto max-w-2xl text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">     
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 items-start">
             {/* Contact Information */}
             <div className="space-y-4 sm:space-y-6">
               <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8">
@@ -184,8 +184,8 @@ export default async function ContactPage() {
             </div>
 
             {/* Map */}
-            <div className="bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg">
-              <div className="h-[550px] sm:h-[650px] lg:h-[880px]">
+            <div className="bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg mt-4 lg:mt-0">
+              <div className="h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[880px]">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3289.666352511148!2d106.90693059211164!3d47.92658319163034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5d96930012bdd359%3A0x707c29cf12cab3f4!2z0JLQvtGP0LYg0L7RhNGE0LjRgQ!5e1!3m2!1sen!2sus!4v1760319969441!5m2!1sen!2sus"
                   width="100%"

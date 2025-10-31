@@ -27,9 +27,30 @@ link[rel="icon"] {
 /* Facebook Messenger Chat */
 .fb-customerchat {
   position: fixed !important;
-  bottom: 20px !important;
-  right: 20px !important;
+  bottom: 16px !important;
+  right: 16px !important;
   z-index: 1000 !important;
+}
+
+/* Facebook Messenger Chat - Mobile responsive */
+@media (min-width: 768px) {
+  .fb-customerchat {
+    bottom: 20px !important;
+    right: 20px !important;
+  }
+}
+
+/* Facebook Chat Button - Smaller on mobile */
+.fb-customerchat iframe {
+  max-width: 60px !important;
+  max-height: 60px !important;
+}
+
+@media (min-width: 768px) {
+  .fb-customerchat iframe {
+    max-width: none !important;
+    max-height: none !important;
+  }
 }
 
 /* Counter animation */

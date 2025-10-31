@@ -52,39 +52,39 @@ export default function MemberCategories() {
   ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
       {categories.map((category) => (
         <Link 
           key={category.id} 
           href={category.href}
-          className="group relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-3 hover:scale-105"
+          className="group relative overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2 sm:hover:-translate-y-3 hover:scale-105"
         >
           {/* Background Gradient */}
           <div className={`absolute inset-0 ${category.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
           
           {/* Animated Background Shape */}
-          <div className={`absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br ${category.color} rounded-full opacity-10 group-hover:scale-150 group-hover:opacity-20 transition-all duration-700`}></div>
+          <div className={`absolute -right-10 -top-10 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br ${category.color} rounded-full opacity-10 group-hover:scale-150 group-hover:opacity-20 transition-all duration-700`}></div>
           
           {/* Content */}
-          <div className="relative p-8 z-10">
+          <div className="relative p-4 sm:p-6 md:p-8 z-10">
             {/* Icon Container */}
-            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br ${category.color} text-white shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 mb-6`}>
+            <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br ${category.color} text-white shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 mb-4 sm:mb-5 md:mb-6`}>
               {category.icon}
             </div>
 
             {/* Title */}
-            <div className="mb-6">
-              <h4 className="text-2xl font-extrabold tracking-tight text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 leading-tight">
+            <div className="mb-4 sm:mb-5 md:mb-6">
+              <h4 className="text-xl sm:text-2xl font-extrabold tracking-tight text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 leading-tight">
                 {category.title}
               </h4>
             </div>
 
             {/* Button/Link */}
             <div className="flex items-center justify-between">
-              <span className="inline-flex items-center text-indigo-600 text-sm font-semibold group-hover:text-indigo-700 transition-colors duration-300">
+              <span className="inline-flex items-center text-indigo-600 text-xs sm:text-sm font-semibold group-hover:text-indigo-700 transition-colors duration-300">
                 Дэлгэрэнгүй
                 <svg 
-                  className="ml-2 w-5 h-5 transition-transform duration-500 group-hover:translate-x-2" 
+                  className="ml-2 w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-500 group-hover:translate-x-2" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -94,7 +94,7 @@ export default function MemberCategories() {
               </span>
               
               {/* Decorative Line */}
-              <div className="h-px flex-1 ml-4 bg-gradient-to-r from-gray-300 to-transparent group-hover:from-indigo-400 transition-colors duration-500"></div>
+              <div className="h-px flex-1 ml-3 sm:ml-4 bg-gradient-to-r from-gray-300 to-transparent group-hover:from-indigo-400 transition-colors duration-500"></div>
             </div>
           </div>
 

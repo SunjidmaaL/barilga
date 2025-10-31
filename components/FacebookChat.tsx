@@ -67,21 +67,21 @@ export default function FacebookChat() {
       
       {/* Facebook Chat Notification */}
       {showNotification && (
-        <div className="fixed bottom-24 right-6 z-50 animate-slide-up">
+        <div className="fixed bottom-20 right-4 md:bottom-24 md:right-6 z-50 animate-slide-up">
           <div className="relative flex items-center justify-center">
-            <div className="rounded-full bg-white p-3 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+            <div className="rounded-full bg-white p-2 md:p-3 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
               <img 
-                className="size-16 rounded-full" 
+                className="size-12 md:size-16 rounded-full" 
                 src="/img/chatbot.png" 
                 alt="БХБЯ Logo" 
               />
             </div>
             <button
               onClick={() => setShowNotification(false)}
-              className="absolute -top-1 -right-1 flex items-center justify-center size-6 rounded-full bg-gray-800 text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md"
+              className="absolute -top-0.5 -right-0.5 md:-top-1 md:-right-1 flex items-center justify-center size-5 md:size-6 rounded-full bg-gray-800 text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md"
               aria-label="Close"
             >
-              <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-3 md:size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>

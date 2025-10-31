@@ -35,11 +35,11 @@ interface Training {
 
 function TrainingLoading() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
       {[...Array(3)].map((_, i) => (
-        <div key={i} className="rounded-xl bg-white p-6 shadow-sm border border-gray-200 animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-24 mb-3"></div>
-          <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
+        <div key={i} className="rounded-xl bg-white p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200 animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-20 sm:w-24 mb-3"></div>
+          <div className="h-5 sm:h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
           <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
           <div className="h-4 bg-gray-200 rounded w-2/3"></div>
         </div>
@@ -71,19 +71,19 @@ export default function TrainingAnnouncements() {
 
 
   const EmptyCard = () => (
-    <div className="rounded-xl bg-blue-50 border-2 border-dashed border-blue-300 p-8 text-center">
-      <div className="mx-auto mb-4 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-        <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="rounded-xl bg-blue-50 border-2 border-dashed border-blue-300 p-4 sm:p-6 md:p-8 text-center">
+      <div className="mx-auto mb-3 sm:mb-4 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-100 rounded-full flex items-center justify-center">
+        <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       </div>
-      <h3 className="text-lg font-semibold text-gray-600">Сургалт байхгүй байна</h3>
+      <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-600">Сургалт байхгүй байна</h3>
     </div>
   )
 
   if (trainings.length === 0) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         {[...Array(3)].map((_, i) => <EmptyCard key={i} />)}
       </div>
     )
@@ -92,7 +92,7 @@ export default function TrainingAnnouncements() {
   const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
       {trainings.map((training) => {
         // Handle both Strapi v4 structure (attributes) and direct structure
         // Support nested attributes as well as flat structure
@@ -138,18 +138,18 @@ export default function TrainingAnnouncements() {
                 />
               </div>
               
-              <div className="p-5">
+              <div className="p-4 sm:p-5">
                 <p className="text-xs text-gray-500">
                   {dateLocation || 'Огноо тодорхойгүй'}
                 </p>
-                <h4 className="mt-1 text-lg font-semibold text-gray-900 line-clamp-2">
+                <h4 className="mt-1 text-base sm:text-lg font-semibold text-gray-900 line-clamp-2">
                   {title}
                 </h4>
-                <p className="mt-2 text-gray-600 text-sm line-clamp-3">
+                <p className="mt-2 text-gray-600 text-xs sm:text-sm line-clamp-3">
                   {description}
                 </p>
                 {price && (
-                  <div className="mt-3 text-sm font-medium text-indigo-600">
+                  <div className="mt-3 text-xs sm:text-sm font-medium text-indigo-600">
                     Үнэ: {price.toLocaleString()}₮
                   </div>
                 )}

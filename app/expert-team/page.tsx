@@ -14,8 +14,14 @@ export default async function ExpertTeamPage() {
   
   // Process images to extract URL and alt text
   const processedImages = images.map((item: any, index: number) => {
-    // Strapi v4 structure: image is directly in the item, not in attributes
-    const imageData = item.image
+    // Try multiple possible locations of the image field (Strapi v4 variations)
+    const imageData =
+      item?.image ||
+      item?.attributes?.image ||
+      item?.attributes?.images ||
+      item?.images ||
+      item // as a last resort, pass the whole entity for deep extraction
+
     const imageUrl = getImageUrl(imageData)
     const altText = item.alt || `Expert Team Image ${index + 1}`
     
@@ -30,22 +36,22 @@ export default async function ExpertTeamPage() {
   
   // Fallback images if Strapi data is not available
   const fallbackImages = [
-    { url: '/img/background1.jpg', alt: 'Процессийн хяналт' },
-    { url: '/img/background.jpg', alt: 'Багийн бүрэлдэхүүн' },
-    { url: '/img/background.jpg', alt: 'Үйл ажиллагааны чиглэл' }
+    { url: '/img/expert2.jpg', alt: 'Процессийн хяналт' },
+    { url: '/img/expert.jpg', alt: 'Багийн бүрэлдэхүүн' },
+    { url: '/img/expert1.jpg', alt: 'Үйл ажиллагааны чиглэл' }
   ]
   
   // Use Strapi images if available, otherwise use fallback
   const displayImages = processedImages.filter((img: any) => img.url).length >= 3 ? processedImages : fallbackImages
   
-  // console.log('Display images:', displayImages)
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative bg-indigo-50 border-y border-indigo-100">
         <div className="absolute inset-0">
           <img 
-            src="/img/background.jpg" 
+            src="/img/expert2.jpg" 
             alt="Экспертийн багийн ажил" 
             className="w-full h-full object-cover opacity-20"
           />
@@ -54,13 +60,13 @@ export default async function ExpertTeamPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-12 md:py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-6 sm:py-8 md:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Process Control Section */}
-        <div className="bg-white rounded-xl p-8 shadow ring-1 ring-gray-200 mb-8">
-          <h2 className="text-2xl md:text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow ring-1 ring-gray-200 mb-4 sm:mb-6 md:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -68,8 +74,8 @@ export default async function ExpertTeamPage() {
           </h2>
 
           {/* Introduction */}
-          <div className="bg-indigo-50 rounded-xl p-6 mb-8 border-l-4 border-indigo-500">
-            <p className="text-base md:text-lg leading-relaxed text-gray-700">
+          <div className="bg-indigo-50 rounded-xl p-4 sm:p-5 md:p-6 mb-4 sm:mb-6 md:mb-8 border-l-4 border-indigo-500">
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 text-justify">
               <span className="font-semibold text-indigo-900">МБМҮХолбоо</span> нь 
               <span className="font-semibold text-indigo-700"> 2012 оноос хойш</span> барилгын материалын үйлдвэрлэлд 
               тусгай зөвшөөрөл олгох эс олгох ажлын хүрээнд хамгийн үр дүнтэй зохион байгуулалтанд 
@@ -79,14 +85,14 @@ export default async function ExpertTeamPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-start">
             {/* Working Process */}
-            <div className="space-y-6 h-96 flex flex-col justify-center">
-              <div className="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
-                <div className="flex items-start gap-3 mb-4">
+            <div className="space-y-4 sm:space-y-6 h-auto lg:h-96 flex flex-col justify-center">
+              <div className="bg-blue-50 rounded-xl p-4 sm:p-5 md:p-6 border-l-4 border-blue-500">
+                <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-blue-900 mb-2">Ажиллах журам</h3>
-                    <p className="text-gray-700 leading-relaxed">
+                    <h3 className="text-lg sm:text-xl font-semibold text-blue-900 mb-2">Ажиллах журам</h3>
+                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed text-justify">
                       "Экспертийн мэргэжлийн баг"-ийн ажиллах журмыг дотооддоо батлуулан 
                       мэргэжлийн инженер, зөвлөхүүдийг ажиллуулдаг.
                     </p>
@@ -94,11 +100,11 @@ export default async function ExpertTeamPage() {
                 </div>
               </div>
 
-              <div className="bg-green-50 rounded-xl p-6 border-l-4 border-green-500">
-                <div className="flex items-start gap-3 mb-4">
+              <div className="bg-green-50 rounded-xl p-4 sm:p-5 md:p-6 border-l-4 border-green-500">
+                <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-green-900 mb-2">Хамтын ажиллагаа</h3>
-                    <p className="text-gray-700 leading-relaxed">
+                    <h3 className="text-lg sm:text-xl font-semibold text-green-900 mb-2">Хамтын ажиллагаа</h3>
+                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed text-justify">
                       Үйлдвэрүүдэд мэргэжлийн зөвлөгөө өгөх, зөвлөмж өгч хамтын ажиллагаа, 
                       эргэх холбоог бий болгодог.
                     </p>
@@ -108,34 +114,34 @@ export default async function ExpertTeamPage() {
             </div>
             
             {/* Image Section */}
-            <div>
+            <div className="mt-4 lg:mt-0">
               <img 
-                src={displayImages[0]?.url || '/img/background1.jpg'} 
+                src={displayImages[0]?.url || '/img/expert2.jpg'} 
                 alt={displayImages[0]?.alt || 'Процессийн хяналт'} 
-                className="w-full h-96 object-cover rounded-xl shadow-lg"
+                className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-xl shadow-lg"
               />
             </div>
           </div>
         </div>
 
         {/* Team Members Section */}
-        <div className="bg-white rounded-xl p-8 shadow ring-1 ring-gray-200 mb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow ring-1 ring-gray-200 mb-4 sm:mb-6 md:mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-end">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                 </div>
                 Багийн бүрэлдэхүүн
               </h2>
 
-              <p className="text-gray-600 mb-6">
+              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                 Мэргэжлийн инженер, зөвлөхүүдийн бүрэлдэхүүн:
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 h-96 content-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 h-auto lg:h-96 content-center">
             {[
               { 
                 title: "Технологич инженер",
@@ -195,12 +201,12 @@ export default async function ExpertTeamPage() {
             ].map((member, i) => (
               <div
                 key={i}
-                className="group bg-white border border-gray-200 rounded-xl p-6 transition-all duration-300"
+                className="group bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300"
               >
-                <div className={`w-12 h-12 ${member.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 ${member.color} rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform`}>
                   {member.icon}
                 </div>
-                <h3 className="text-base font-semibold text-gray-900">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900">
                   {member.title}
                 </h3>
               </div>
@@ -211,32 +217,32 @@ export default async function ExpertTeamPage() {
             {/* Image Section */}
             <div>
               <img 
-                src={displayImages[1]?.url || '/img/background.jpg'} 
+                src={displayImages[1]?.url || '/img/expert.jpg'} 
                 alt={displayImages[1]?.alt || 'Багийн бүрэлдэхүүн'} 
-                className="w-full mt-32 lg:mt-28 h-96 object-cover rounded-xl shadow-lg"
+                className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-xl shadow-lg"
               />
             </div>
           </div>
         </div>
 
         {/* Services Section */}
-        <div className="bg-white rounded-xl p-8 shadow ring-1 ring-gray-200">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow ring-1 ring-gray-200">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
             </div>
             Үйл ажиллагааны чиглэл
           </h2>
 
-          <p className="text-gray-600 mb-8">
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 md:mb-8">
             Тус мэргэжлийн баг нь үйлдвэрүүдэд дараах үйл ажиллагаа, үйлчилгээг үзүүлдэг:
           </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-start">
             {/* Services Grid */}
-            <div className="grid grid-cols-2 gap-4 h-96 content-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 h-auto lg:h-96 content-center">
             {[
               {
                 title: "Мэргэжлийн зөвлөгөө",
@@ -261,12 +267,12 @@ export default async function ExpertTeamPage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="group bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-6 transition-all"
+                className="group bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all"
               >
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -274,11 +280,11 @@ export default async function ExpertTeamPage() {
             </div>
             
             {/* Image Section */}
-            <div>
+            <div className="mt-4 lg:mt-0">
               <img 
-                src={displayImages[2]?.url || '/img/background.jpg'} 
+                src={displayImages[2]?.url || '/img/expert1.jpg'}  
                 alt={displayImages[2]?.alt || 'Үйл ажиллагааны чиглэл'} 
-                className="w-full h-96 object-cover rounded-xl shadow-lg"
+                className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-xl shadow-lg"
               />
             </div>
           </div>

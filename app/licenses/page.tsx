@@ -54,7 +54,7 @@ export default async function LicensesPage() {
   return (
     <>
       {/* Information Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 lg:pt-8 pb-8 sm:pb-12 lg:pb-16">
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
           <div className="bg-indigo-50 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 border-b border-indigo-100">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
@@ -68,7 +68,7 @@ export default async function LicensesPage() {
           <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-4 sm:space-y-6">
             <div className="prose max-w-none">
               <div className="bg-blue-50 rounded-lg sm:rounded-xl p-4 sm:p-6 border-l-4 border-indigo-600">
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed text-justify">
                   Монгол Улсын Засгийн газрын <span className="font-semibold text-indigo-700">2010 оны 325 дугаар тогтоолоор</span> батлагдсан төрийн зарим чиг үүргийг мэргэжлийн холбоодоор гэрээгээр гүйцэтгэх шийдвэрийг хэрэгжүүлэх зорилтын хүрээнд БХБСайдын <span className="font-semibold text-indigo-700">2012 оны 49, 2016 оны 11, 2019 оны 19, 2020 оны 23 тоот тушаалуудаар</span> "Барилгын материалын үйлдвэрлэл эрхлэх тусгай зөвшөөрөл олгох" ажлыг БХБЯ-тай гэрээ байгуулан <span className="font-semibold text-indigo-700">12 дэх жилдээ</span> тасралтгүй гүйцэтгэж байна.
                 </p>
               </div>
@@ -83,7 +83,7 @@ export default async function LicensesPage() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-semibold text-sm sm:text-base text-gray-900 mb-2">Цахим систем</h3>
-                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
                         2021 оны 06 сарын 25-ны өдрийн БХБСайдын <span className="font-semibold">147 тоот тушаалаар</span> "Барилга, байгууламжийн зураг төсөл боловсруулах, барилгын ажил гүйцэтгэх, барилгын материал үйлдвэрлэл, өргөх байгууламж, түүний эд ангийн үйлдвэрлэл, угсралт, засвар үйлчилгээ эрхлэх хуулийн эдгээдийн тусгай зөвшөөрөл олгох" үйл ажиллагааг цахимаар олгох шинэчилсэн журам батлагдсан.
                       </p>
                     </div>
@@ -99,7 +99,7 @@ export default async function LicensesPage() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-semibold text-sm sm:text-base text-gray-900 mb-2">Үйлчилгээний төв</h3>
-                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
                         Хуулийн этгээдэд тусгай зөвшөөрөл олгох ажлыг Барилгын тухай хуулийн 34.1.14-т заасан чиг үүргийг гэрээний үндсэн дээр гүйцэтгэж байгаа байгууллага нэг цэгийн үйлчилгээ болон <a href="https://www.mcis.gov.mn" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-800 font-semibold underline">WWW.MCIS.GOV.MN</a> цахим системээр зохион байгуулж байна.
                       </p>
                     </div>
@@ -126,15 +126,15 @@ export default async function LicensesPage() {
       </section>
 
       {/* Licenses Table Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-8 sm:pb-12 lg:pb-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-0 pb-8 sm:pb-12 lg:pb-16">
         <div className="mb-6 sm:mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Тусгай зөвшөөрөл олгосон байдал</h2>
         </div>
 
         {/* Statistics Table */}
         <div className="overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-lg border border-gray-200 mb-6 sm:mb-8">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-300">
+          <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <table className="min-w-[650px] sm:min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -227,8 +227,8 @@ export default async function LicensesPage() {
 
         {/* Licenses Table */}
         <div className="overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-lg border border-gray-200">
-          <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-300">
+          <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <table className="min-w-[600px] sm:min-w-full divide-y divide-gray-300">
             <thead className="bg-gray-50">
               <tr>
                   <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">

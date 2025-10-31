@@ -58,7 +58,7 @@ export default function HeroSlider() {
 
   if (loading) {
     return (
-      <section className="relative h-[60vh] md:h-[80vh]">
+      <section className="relative h-screen w-full -mt-20">
         {/* Loading Skeleton */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 animate-pulse">
           <div className="absolute inset-0 bg-black/20" />
@@ -75,7 +75,7 @@ export default function HeroSlider() {
   }
 
   return (
-    <section className="relative h-[60vh] md:h-[80vh]">
+    <section className="relative h-screen w-full -mt-20">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         slidesPerView={1}
@@ -93,7 +93,7 @@ export default function HeroSlider() {
         {displaySlides.map((slide) => (
           <SwiperSlide key={slide.id} className="h-full">
             <div 
-              className="relative w-full h-full min-h-[60vh] md:min-h-[80vh] bg-cover bg-center transition-opacity duration-500 "
+              className="relative w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-500"
               style={{ backgroundImage: `url(${getImageUrl(slide)})` }}
             >
               <div className="absolute inset-0 bg-black/40" />

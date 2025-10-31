@@ -156,10 +156,10 @@ export default function NewsDetailPage() {
   const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
-        <div className="mb-8">
+        <div className="mb-4 sm:mb-6 md:mb-8">
           <Link 
             href="/news" 
             className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
@@ -183,21 +183,21 @@ export default function NewsDetailPage() {
           </div>
 
           {/* Content */}
-          <div className="p-8">
+          <div className="p-4 sm:p-6 md:p-8">
             {/* Date */}
-            <p className="text-sm text-gray-500 mb-4">{formattedDate}</p>
+            <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{formattedDate}</p>
             
             {/* Title */}
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">{title}</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">{title}</h1>
             
             {/* Description */}
             {description && (
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">{description}</p>
+              <p className="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6 leading-relaxed">{description}</p>
             )}
             
             {/* Content */}
             {content && content !== description && (
-              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              <div className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {content}
               </div>
             )}

@@ -71,21 +71,21 @@ export default function ComparisonTable() {
       </div>
 
       {/* Mobile View */}
-      <div className="md:hidden space-y-3">
+      <div className="md:hidden space-y-3 sm:space-y-4">
         {rows.map((row, index) => (
-          <div key={index} className="bg-white rounded-lg shadow ring-1 ring-gray-200 p-4">
-            <h3 className="text-sm font-bold text-indigo-700 mb-3 pb-2 border-b border-gray-200">
+          <div key={index} className="bg-white rounded-lg shadow ring-1 ring-gray-200 p-3 sm:p-4">
+            <h3 className="text-xs sm:text-sm font-bold text-indigo-700 mb-2 sm:mb-3 pb-2 border-b border-gray-200">
               {row.category}
             </h3>
             
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <div>
                 <p className="text-xs font-semibold text-gray-500 mb-1">{headers[1]}</p>
-                <p className="text-xs text-gray-700 leading-relaxed">{row.col1 || '-'}</p>
+                <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">{row.col1 || '-'}</p>
               </div>
               <div className="pt-2 border-t border-gray-100">
                 <p className="text-xs font-semibold text-gray-500 mb-1">{headers[2]}</p>
-                <p className="text-xs text-gray-700 leading-relaxed">{row.col2 || '-'}</p>
+                <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">{row.col2 || '-'}</p>
               </div>
             </div>
           </div>

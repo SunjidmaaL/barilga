@@ -46,10 +46,10 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gray-100 border-y border-gray-200 py-16">
-        <div className="max-w-6xl mx-auto px-4">
+      <section className="bg-gray-100 border-y border-gray-200 py-8 sm:py-12 md:py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
               Төслүүд
             </h1>
           </div>
@@ -57,11 +57,11 @@ export default function ProjectsPage() {
       </section>
 
       {/* Projects Grid */}
-      <section className="py-12 md:py-20 px-4">
+      <section className="py-6 sm:py-8 md:py-12 lg:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
 
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
             {projects.map((project) => (
               <div
                 key={project.id}
@@ -89,29 +89,29 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Project Content */}
-                <div className="p-6">
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                <div className="p-4 sm:p-5 md:p-6">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                     {project.title}
                   </h3>
                   
-                  <p className="text-gray-600 mb-4 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 leading-relaxed">
                     {project.description}
                   </p>
 
                   {/* Project Details */}
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-2 mb-4 sm:mb-6">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">Хугацаа:</span>
-                      <span className="text-sm font-medium text-gray-700">{project.year}</span>
+                      <span className="text-xs sm:text-sm text-gray-500">Хугацаа:</span>
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">{project.year}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">Төсөв:</span>
-                      <span className="text-sm font-medium text-gray-700">{project.budget}</span>
+                      <span className="text-xs sm:text-sm text-gray-500">Төсөв:</span>
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">{project.budget}</span>
                     </div>
                   </div>
 
                   {/* Action Button */}
-                  <button className="w-full bg-gray-600 text-white py-3 rounded-lg font-medium hover:bg-gray-700 transition-all duration-300">
+                  <button className="w-full bg-gray-600 text-white py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium hover:bg-gray-700 transition-all duration-300">
                     Дэлгэрэнгүй мэдээлэл
                   </button>
                 </div>
@@ -122,30 +122,30 @@ export default function ProjectsPage() {
       </section>
 
       {/* Statistics Section */}
-      <section className="py-12 md:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section className="py-6 sm:py-8 md:py-12 lg:py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">
               Төслийн үр дүн
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-sm sm:text-base md:text-lg text-gray-600">
               Холбооны хэрэгжүүлсэн төслүүдийн статистик мэдээлэл
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
             {[
               { number: '50+', label: 'Хэрэгжүүлсэн төсөл', icon: '📊' },
               { number: '500+', label: 'Тэрбум төгрөг', icon: '💰' },
               { number: '250+', label: 'Дэмжсэн үйлдвэр', icon: '🏭' },
               { number: '20+', label: 'Жилийн туршлага', icon: '⭐' }
             ].map((stat, index) => (
-              <div key={index} className="text-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
-                <div className="text-4xl mb-4">{stat.icon}</div>
-                <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+              <div key={index} className="text-center p-3 sm:p-4 md:p-5 lg:p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl sm:rounded-2xl">
+                <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3 md:mb-4">{stat.icon}</div>
+                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
                   {stat.number}
                 </div>
-                <div className="text-gray-600 font-medium">
+                <div className="text-xs sm:text-sm md:text-base text-gray-600 font-medium">
                   {stat.label}
                 </div>
               </div>
