@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { getTrainings } from '@/lib/strapi'
+import { getTrainings, getTrainingAnkets } from '@/lib/strapi'
 import TrainingList from '@/components/TrainingList'
 
 // Loading component
@@ -24,6 +24,42 @@ async function TrainingContent() {
   const trainingsData = await getTrainings()
 
   return <TrainingList trainings={trainingsData || []} />
+}
+
+// Training Anket content component
+async function TrainingAnketContent() {
+  const anketData = await getTrainingAnkets()
+  
+  let fileUrl = ''
+  
+  if (anketData) {
+    const attrs = anketData.attributes || anketData
+    const file = attrs?.file || attrs?.anket || attrs?.form
+    
+    // Get file URL
+    if (file) {
+      const url = file?.data?.attributes?.url || file?.url || file?.attributes?.url
+      if (url) {
+        fileUrl = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${url}`
+      }
+    }
+  }
+  
+  // Build download URL using the API route
+  const downloadUrl = fileUrl ? `/api/download?url=${encodeURIComponent(fileUrl)}` : '#'
+  
+  return (
+    <a
+      href={downloadUrl}
+      download
+      className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 whitespace-nowrap"
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <span>Анкет татаж авах</span>
+    </a>
+  )
 }
 
 export default function TrainingPage() {
@@ -65,6 +101,34 @@ export default function TrainingPage() {
       <Suspense fallback={<TrainingLoading />}>
         <TrainingContent />
       </Suspense>
+
+      {/* Training Application Form Download Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-12 pb-6 sm:pb-8">
+        <div className="rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 p-6 sm:p-8 border border-blue-100 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+            <div className="flex items-start gap-4 flex-1">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+                <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">
+                  Сургалтын анкет
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                  Сургалтад бүртгүүлэхийн тулд анкетыг татаж аваад бөглөнө үү.
+                </p>
+              </div>
+            </div>
+            <Suspense fallback={
+              <div className="w-32 h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+            }>
+              <TrainingAnketContent />
+            </Suspense>
+          </div>
+        </div>
+      </section>
     </>
   )
 }

@@ -466,17 +466,20 @@ async function LawContent() {
                     const documentId = law.attributes?.documentId || law.documentId
 
                     const title = law.attributes?.title || law.title || 'Хууль эрх зүйн баримт'
-                    // Strapi-ийн date талбарыг ашиглах (publishedAt биш)
-                    const publishedDate = law.attributes?.date
+                    // Strapi-ийн date талбарыг ашиглах, хэрэв null бол publishedAt ашиглах
+                    const publishedDate = law.attributes?.date || law.attributes?.publishedAt || law.publishedAt
                     
                     let formattedDate = 'Тодорхойгүй'
                     if (publishedDate) {
                       try {
                         let date
                         
-                        // Strapi-аас ирж байгаа огноо "MM/DD/YYYY" форматаар байж болно
-                        if (typeof publishedDate === 'string' && publishedDate.includes('/')) {
-                          // "08/08/2024" форматыг parse хийх
+                        // ISO timestamp форматыг эхлээд шалгах (Strapi-аас ихэвчлэн ийм форматаар ирдэг)
+                        if (typeof publishedDate === 'string' && publishedDate.includes('T') && publishedDate.includes('Z')) {
+                          // ISO форматын timestamp: "2025-10-09T14:38:02.340Z"
+                          date = new Date(publishedDate)
+                        } else if (typeof publishedDate === 'string' && publishedDate.includes('/')) {
+                          // "MM/DD/YYYY" форматыг parse хийх
                           const parts = publishedDate.split('/')
                           if (parts.length === 3) {
                             // MM/DD/YYYY -> YYYY-MM-DD болгож ISO форматаар parse хийх
@@ -486,15 +489,17 @@ async function LawContent() {
                             date = new Date(publishedDate)
                           }
                         } else {
-                          // ISO форматаар байвал шууд parse хийх
+                          // Бусад форматууд
                           date = new Date(publishedDate)
                         }
                         
                         if (!isNaN(date.getTime())) {
-                          formattedDate = date.toLocaleDateString('mn-MN')
-                          console.log('Successfully formatted date:', formattedDate)
+                          formattedDate = date.toLocaleDateString('mn-MN', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })
                         } else {
-                          console.log('Invalid date, showing raw value:', publishedDate)
                           formattedDate = publishedDate.toString()
                         }
                       } catch (error) {
@@ -543,21 +548,20 @@ async function LawContent() {
               const documentId = law.attributes?.documentId || law.documentId
 
               const title = law.attributes?.title || law.title || 'Хууль эрх зүйн баримт'
-              // Strapi-ийн date талбарыг ашиглах (publishedAt биш)
-              const publishedDate = law.attributes?.date
-              
-              // Debug огноо
-              console.log('Mobile Law data:', law)
-              console.log('Mobile Published date raw:', publishedDate)
+              // Strapi-ийн date талбарыг ашиглах, хэрэв null бол publishedAt ашиглах
+              const publishedDate = law.attributes?.date || law.attributes?.publishedAt || law.publishedAt
               
               let formattedDate = 'Тодорхойгүй'
               if (publishedDate) {
                 try {
                   let date
                   
-                  // Strapi-аас ирж байгаа огноо "MM/DD/YYYY" форматаар байж болно
-                  if (typeof publishedDate === 'string' && publishedDate.includes('/')) {
-                    // "08/08/2024" форматыг parse хийх
+                  // ISO timestamp форматыг эхлээд шалгах (Strapi-аас ихэвчлэн ийм форматаар ирдэг)
+                  if (typeof publishedDate === 'string' && publishedDate.includes('T') && publishedDate.includes('Z')) {
+                    // ISO форматын timestamp: "2025-10-09T14:38:02.340Z"
+                    date = new Date(publishedDate)
+                  } else if (typeof publishedDate === 'string' && publishedDate.includes('/')) {
+                    // "MM/DD/YYYY" форматыг parse хийх
                     const parts = publishedDate.split('/')
                     if (parts.length === 3) {
                       // MM/DD/YYYY -> YYYY-MM-DD болгож ISO форматаар parse хийх
@@ -567,15 +571,17 @@ async function LawContent() {
                       date = new Date(publishedDate)
                     }
                   } else {
-                    // ISO форматаар байвал шууд parse хийх
+                    // Бусад форматууд
                     date = new Date(publishedDate)
                   }
                   
                   if (!isNaN(date.getTime())) {
-                    formattedDate = date.toLocaleDateString('mn-MN')
-                    console.log('Mobile Successfully formatted date:', formattedDate)
+                    formattedDate = date.toLocaleDateString('mn-MN', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })
                   } else {
-                    console.log('Mobile Invalid date, showing raw value:', publishedDate)
                     formattedDate = publishedDate.toString()
                   }
                 } catch (error) {
