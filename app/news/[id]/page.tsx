@@ -1,9 +1,7 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
-import { getNews } from '@/lib/strapi'
+import { getNewsById, getNews } from '@/lib/strapi'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import Image from 'next/image'
 
 interface NewsItem {
   id: number
@@ -23,7 +21,6 @@ interface NewsItem {
     createdAt?: string
     updatedAt?: string
   }
-  // Fallback properties for direct data structure
   title?: string
   description?: string
   content?: string
@@ -43,99 +40,42 @@ function formatDate(dateString: string): string {
   return `${year}.${month}.${day}`
 }
 
-export default function NewsDetailPage() {
-  const params = useParams()
-  const newsId = params?.id as string
-  const [newsItem, setNewsItem] = useState<NewsItem | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export async function generateStaticParams() {
+  try {
+    const news = await getNews()
+    return news?.map((item: NewsItem) => ({
+      id: item.id.toString(),
+    })) || []
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
 
-  useEffect(() => {
-    const loadNewsItem = async () => {
-      if (!newsId) return
-
-      try {
-        setLoading(true)
-        
-        const allNews = await getNews()
-        
-        // Find the specific news item by ID
-        const foundNews = allNews?.find((item: NewsItem) => item.id.toString() === newsId)
-        
-        if (!foundNews) {
-          throw new Error('Мэдээ олдсонгүй')
-        }
-        
-        setNewsItem(foundNews)
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
-        setError(`Мэдээллийг ачаалахад алдаа гарлаа: ${errorMessage}`)
-      } finally {
-        setLoading(false)
-      }
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const newsItem = await getNewsById(params.id)
+  
+  if (!newsItem) {
+    return {
+      title: 'Мэдээ олдсонгүй',
     }
-
-    loadNewsItem()
-  }, [newsId])
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/4 mb-8"></div>
-            <div className="aspect-[16/9] bg-gray-200 rounded-lg mb-8"></div>
-            <div className="space-y-4">
-              <div className="h-4 bg-gray-200 rounded w-full"></div>
-              <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-              <div className="h-4 bg-gray-200 rounded w-4/6"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Алдаа гарлаа</h1>
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-medium text-red-800 mb-2">Мэдээ олдсонгүй</h3>
-              <p className="text-red-600">{error}</p>
-            </div>
-            <Link 
-              href="/news" 
-              className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Мэдээний жагсаалт руу буцах
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+  const attributes = newsItem.attributes || newsItem
+  const title = attributes?.title || 'Мэдээ'
+  const description = attributes?.description || attributes?.content || ''
+
+  return {
+    title,
+    description,
   }
+}
+
+export default async function NewsDetailPage({ params }: { params: { id: string } }) {
+  const newsItem = await getNewsById(params.id)
 
   if (!newsItem) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Мэдээ олдсонгүй</h1>
-            <p className="text-gray-600 mb-8">Хүссэн мэдээ олдсонгүй байна.</p>
-            <Link 
-              href="/news" 
-              className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Мэдээний жагсаалт руу буцах
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+    notFound()
   }
 
   // Safe access to news data with fallbacks
@@ -152,8 +92,8 @@ export default function NewsDetailPage() {
   const formattedDate = formatDate(publishedAt)
   
   // Fallback image URL
-  const fallbackImage = '/img/news-placeholder.svg'
-  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+  const fallbackImage = '/img/background.jpg'
+  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'
 
   return (
     <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
@@ -174,13 +114,18 @@ export default function NewsDetailPage() {
         {/* Article */}
         <article className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* Image */}
-          <div className="aspect-[16/9] w-full relative bg-gray-100 overflow-hidden">
-            <img 
-              className="w-full h-full object-cover" 
-              src={imageUrl ? `${strapiUrl}${imageUrl}` : fallbackImage}
-              alt={imageAlt || title}
-            />
-          </div>
+          {imageUrl && (
+            <div className="aspect-[16/9] w-full relative bg-gray-100 overflow-hidden">
+              <Image 
+                className="object-cover" 
+                src={`${strapiUrl}${imageUrl}`}
+                alt={imageAlt || title}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
+              />
+            </div>
+          )}
 
           {/* Content */}
           <div className="p-4 sm:p-6 md:p-8">

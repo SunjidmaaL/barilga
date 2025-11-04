@@ -77,9 +77,9 @@ async function NewsContent() {
         {newsData.map((news) => {
           // Get image URL from Strapi structure
           const imageUrl = news.attributes?.image?.data?.attributes?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${news.attributes.image.data.attributes.url}`
+            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'}${news.attributes.image.data.attributes.url}`
             : news.image?.url 
-            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${news.image.url}`
+            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'}${news.image.url}`
             : '/img/background.jpg'
 
           return (
