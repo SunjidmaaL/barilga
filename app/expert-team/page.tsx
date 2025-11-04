@@ -34,6 +34,19 @@ export default async function ExpertTeamPage() {
     }
   })
   
+  // Filter valid Strapi images
+  const validStrapiImages = processedImages.filter((img: any) => img.url)
+  
+  // Debug: Log Strapi images
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Expert Team Images Debug:', {
+      imagesDataLength: imagesData?.length || 0,
+      processedImagesLength: processedImages.length,
+      validStrapiImagesLength: validStrapiImages.length,
+      validStrapiImages: validStrapiImages.map((img: any) => ({ url: img.url, alt: img.alt }))
+    })
+  }
+  
   // Fallback images if Strapi data is not available
   const fallbackImages = [
     { url: '/img/expert2.jpg', alt: 'Процессийн хяналт' },
@@ -41,8 +54,14 @@ export default async function ExpertTeamPage() {
     { url: '/img/expert1.jpg', alt: 'Үйл ажиллагааны чиглэл' }
   ]
   
-  // Use Strapi images if available, otherwise use fallback
-  const displayImages = processedImages.filter((img: any) => img.url).length >= 3 ? processedImages : fallbackImages
+  // Use Strapi images if available (even if less than 3), otherwise use fallback
+  const displayImages = validStrapiImages.length > 0 ? validStrapiImages : fallbackImages
+  
+  // Get the image for "Багийн бүрэлдэхүүн" section - prefer Strapi image if available
+  // If we have multiple Strapi images, use the second one (index 1), otherwise use the first or fallback
+  const teamImage = validStrapiImages.length > 1 ? validStrapiImages[1] : 
+                    validStrapiImages.length === 1 ? validStrapiImages[0] : 
+                    fallbackImages[1]
   
 
   return (
@@ -126,101 +145,76 @@ export default async function ExpertTeamPage() {
 
         {/* Team Members Section */}
         <div className="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow ring-1 ring-gray-200 mb-4 sm:mb-6 md:mb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-end">
-            <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                </div>
-                Багийн бүрэлдэхүүн
-              </h2>
-
-              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                Мэргэжлийн инженер, зөвлөхүүдийн бүрэлдэхүүн:
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 h-auto lg:h-96 content-center">
-            {[
-              { 
-                title: "Технологич инженер",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                ),
-                color: "bg-blue-100 text-blue-700"
-              },
-              { 
-                title: "Механик инженер",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                  </svg>
-                ),
-                color: "bg-green-100 text-green-700"
-              },
-              { 
-                title: "Цахилгааны инженер",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                ),
-                color: "bg-yellow-100 text-yellow-700"
-              },
-              { 
-                title: "Холбооны төлөөлөл",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                ),
-                color: "bg-purple-100 text-purple-700"
-              },
-              { 
-                title: "Цахим мэдээлэлийн инженер",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                ),
-                color: "bg-indigo-100 text-indigo-700"
-              },
-              { 
-                title: "Бусад мэргэжлийн баг",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                ),
-                color: "bg-pink-100 text-pink-700"
-              },
-            ].map((member, i) => (
-              <div
-                key={i}
-                className="group bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300"
-              >
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 ${member.color} rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform`}>
-                  {member.icon}
-                </div>
-                <h3 className="text-sm sm:text-base font-semibold text-gray-900">
-                  {member.title}
-                </h3>
-              </div>
-            ))}
-              </div>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
             </div>
-            
-            {/* Image Section */}
-            <div>
-              <img 
-                src={displayImages[1]?.url || '/img/expert.jpg'} 
-                alt={displayImages[1]?.alt || 'Багийн бүрэлдэхүүн'} 
-                className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-xl shadow-lg"
-              />
+            Багийн бүрэлдэхүүн
+          </h2>
+
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+            Мэргэжлийн инженер, зөвлөхүүдийн бүрэлдэхүүн:
+          </p>
+
+          {/* Specialties List */}
+          <div className="mb-6 sm:mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-start">
+              {/* All 8 specialties in a single column */}
+              <div className="space-y-3 sm:space-y-4">
+                {[
+                  { 
+                    desc: "Цемент, шохой гөлтгөнийн холбогч болон бетон, төмөр бетон, бэлэн бетон зуурмагийн үйлдвэрлэлийн чиглэлийн технологи инженер"
+                  },
+                  { 
+                    desc: "Керамик тоосго, керамик хавтан, өнгөлгөөний тоосго, керамзит, алевролит, перлитийн хөнгөн дүүргэгч, материалын чиглэлийн технологи инженер"
+                  },
+                  { 
+                    desc: "Хүдрийн бус ашигт малтмалын ашиглалт, олборлолт, бетоны дүүргэгч материал, барилгын чулуу боловсруулах үйлдвэрлэлийн чиглэлийн технологи инженер"
+                  },
+                  { 
+                    desc: "Автоклавын ба автоклавын бус хөнгөнбетон /пено, газо бетон, полистирол бетон/ үйлдвэрлэлийн чиглэлийн технологи инженер"
+                  },
+                  { 
+                    desc: "Дулаалгын эрдэс хөвөн EPS, XPS, PUR, /полиуретан/ хавтан, түүгээр үйлдвэрлэлийн сендвич хавтангийн үйлдвэрлэлийн чиглэлийн технологи инженер"
+                  },
+                  { 
+                    desc: "Металл хийц, стандарт бус хийц, арматур, ган бөмбөлөг, прокатуудын үйлдвэрлэлийн чиглэлийн технологи инженер"
+                  },
+                  { 
+                    desc: "Хуванцар хоолойн төрлүүд, хуванцар цонх, хаалга, барилгын химийн нэмэлт, будаг, эмульс,чулуун будаг, кабель утас, цахилгаан тусгаарлагчийн үйлдвэрлэлийн чиглэлийн технологи инженер"
+                  },
+                  { 
+                    desc: "Барилгын силикат, хөнгөн бетон, дулаан тусгаарлагч материалын инженер"
+                  },
+                ].map((member, i) => (
+                  <div
+                    key={i}
+                    className="group bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:shadow-lg hover:border-indigo-300"
+                  >
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-2 h-2 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <p className="text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
+                          {member.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Image in the 2nd column */}
+              <div className="mt-4 lg:mt-0 lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-8rem)]">
+                <div className="relative w-full h-64 sm:h-80 md:h-96 lg:h-full">
+                  <img 
+                    src={teamImage?.url || '/img/expert.jpg'} 
+                    alt={teamImage?.alt || 'Багийн бүрэлдэхүүн'} 
+                    className="w-full h-full object-cover rounded-xl shadow-lg"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

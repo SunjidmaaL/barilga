@@ -1,4 +1,4 @@
-import { getNews } from '@/lib/strapi'
+import { getNews, getImageUrl } from '@/lib/strapi'
 import NewsCard from './NewsCard'
 
 interface NewsItem {
@@ -47,13 +47,12 @@ export default async function HomepageNews() {
     )
   }
 
-  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
       {latestNews.map((newsItem: NewsItem) => {
         const attrs = newsItem.attributes || newsItem
-        const imageUrl = attrs?.image?.data?.attributes?.url || attrs?.image?.url
+        const image = attrs?.image || newsItem.image
+        const imageUrl = getImageUrl(image) || ''
         
         return (
           <NewsCard 
@@ -64,7 +63,7 @@ export default async function HomepageNews() {
             date={attrs?.publishedAt || attrs?.createdAt 
               ? new Date(attrs.publishedAt || attrs.createdAt || '').toLocaleDateString('mn-MN') 
               : ''}
-            image={imageUrl ? `${strapiUrl}${imageUrl}` : ''}
+            image={imageUrl}
             alt={attrs?.image?.data?.attributes?.alternativeText || attrs?.title || 'News'}
           />
         )

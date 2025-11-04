@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import NewsCard from '@/components/NewsCard'
-import { getNews } from '@/lib/strapi'
+import { getNews, getImageUrl } from '@/lib/strapi'
 
 interface NewsData {
   id: number
@@ -75,12 +75,9 @@ async function NewsContent() {
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         {newsData.map((news) => {
-          // Get image URL from Strapi structure
-          const imageUrl = news.attributes?.image?.data?.attributes?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'}${news.attributes.image.data.attributes.url}`
-            : news.image?.url 
-            ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'}${news.image.url}`
-            : '/img/background.jpg'
+          // Get image URL from Strapi structure using helper function
+          const image = news.attributes?.image || news.image
+          const imageUrl = getImageUrl(image) || '/img/background.jpg'
 
           return (
             <NewsCard 

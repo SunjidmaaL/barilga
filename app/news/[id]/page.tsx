@@ -1,4 +1,4 @@
-import { getNewsById, getNews } from '@/lib/strapi'
+import { getNewsById, getNews, getImageUrl } from '@/lib/strapi'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -80,20 +80,23 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
 
   // Safe access to news data with fallbacks
   const attributes = newsItem.attributes || newsItem
-  const title = attributes?.title || 'Untitled News'
-  const description = attributes?.description || ''
-  const content = attributes?.content || description
-  const publishedAt = attributes?.publishedAt || attributes?.createdAt || ''
-  const image = attributes?.image
-  const imageUrl = image?.data?.attributes?.url || image?.url
+  const title = attributes?.title || newsItem.title || 'Untitled News'
+  const description = attributes?.description || newsItem.description || ''
+  
+  // Get content from multiple possible locations
+  // Strapi Rich Text field might return HTML string or JSON structure
+  let content = attributes?.content || newsItem.content || ''
+  
+  // If content is a string but might be HTML, check if it contains HTML tags
+  const hasHtmlTags = typeof content === 'string' && /<[a-z][\s\S]*>/i.test(content)
+  
+  const publishedAt = attributes?.publishedAt || attributes?.createdAt || newsItem.publishedAt || newsItem.createdAt || ''
+  const image = attributes?.image || newsItem.image
+  const imageUrl = getImageUrl(image)
   const imageAlt = image?.data?.attributes?.alternativeText || image?.alternativeText || title
   
   // Format date
   const formattedDate = formatDate(publishedAt)
-  
-  // Fallback image URL
-  const fallbackImage = '/img/background.jpg'
-  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://effortless-luck-023aebe70f.strapiapp.com'
 
   return (
     <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
@@ -118,7 +121,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
             <div className="aspect-[16/9] w-full relative bg-gray-100 overflow-hidden">
               <Image 
                 className="object-cover" 
-                src={`${strapiUrl}${imageUrl}`}
+                src={imageUrl}
                 alt={imageAlt || title}
                 fill
                 priority
@@ -141,9 +144,19 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
             )}
             
             {/* Content */}
-            {content && content !== description && (
-              <div className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {content}
+            {content && content.trim() && (
+              <div 
+                className="text-sm sm:text-base text-gray-700 leading-relaxed mt-4 sm:mt-6 prose prose-sm sm:prose-base max-w-none"
+                {...(hasHtmlTags ? { dangerouslySetInnerHTML: { __html: content } } : {})}
+              >
+                {!hasHtmlTags && content}
+              </div>
+            )}
+            
+            {/* Fallback message if no content */}
+            {!content && !description && (
+              <div className="text-gray-500 text-center py-8">
+                <p>Мэдээлэл байхгүй байна.</p>
               </div>
             )}
           </div>
