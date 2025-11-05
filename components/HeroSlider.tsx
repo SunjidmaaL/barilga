@@ -1,12 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import { getSlides } from '@/lib/strapi'
 
 interface Slide {
   id: number
@@ -23,55 +21,49 @@ const defaultSlides = [
   { id: 3, image: '/img/background2.jpg' }
 ]
 
-export default function HeroSlider() {
-  const [slides, setSlides] = useState<Slide[]>([])
-  const [loading, setLoading] = useState(true)
+interface HeroSliderProps {
+  initialSlides?: Slide[]
+}
 
-  useEffect(() => {
-    getSlides()
-      .then(data => {
-        setSlides(data || [])
-        setLoading(false)
-      })
-      .catch(() => {
-        setSlides([])
-        setLoading(false)
-      })
-  }, [])
+export default function HeroSlider({ initialSlides }: HeroSliderProps) {
+  // Use server-provided data if available, otherwise use defaults
+  const slides = initialSlides || []
 
   const displaySlides = slides.length > 0 ? slides : defaultSlides
   const hasMultiple = displaySlides.length > 1
 
-
   const getImageUrl = (slide: any) => {
+    // Handle default slides (string image)
     if (typeof slide.image === 'string') {
       return slide.image
     }
     
-    const imageData = slide.image?.[0]
-    if (!imageData?.url) return '/img/background.jpg'
+    // Handle Strapi v4 structure with attributes
+    const attrs = slide.attributes || slide
+    const image = attrs?.image || slide.image
     
-    return imageData.url.startsWith('http') 
-      ? imageData.url 
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imageData.url}`
-  }
-
-  if (loading) {
-    return (
-      <section className="relative h-screen w-full -mt-20">
-        {/* Loading Skeleton */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 animate-pulse">
-          <div className="absolute inset-0 bg-black/20" />
-        </div>
-
-        <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-white px-4">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6">
-            <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white text-lg font-medium">Ачааллаж байна...</p>
-          </div>
-        </div>
-      </section>
-    )
+    // Handle Strapi media structure
+    if (image?.data) {
+      const imageData = Array.isArray(image.data) ? image.data[0] : image.data
+      const url = imageData?.attributes?.url || imageData?.url
+      if (url) {
+        return url.startsWith('http') 
+          ? url 
+          : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${url}`
+      }
+    }
+    
+    // Handle array of images
+    if (Array.isArray(image) && image[0]) {
+      const url = image[0]?.url || image[0]?.attributes?.url
+      if (url) {
+        return url.startsWith('http') 
+          ? url 
+          : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${url}`
+      }
+    }
+    
+    return '/img/background.jpg'
   }
 
   return (

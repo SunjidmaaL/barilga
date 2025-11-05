@@ -8,6 +8,10 @@ const nextConfig = {
         pathname: '/uploads/**',
       },
       {
+        protocol: 'https',
+        hostname: 'effortless-luck-023aebe70f.media.strapiapp.com',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
         pathname: '/uploads/**',

@@ -1,8 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { getTrainings } from '@/lib/strapi'
-
 interface Training {
   id: number
   attributes?: {
@@ -33,19 +30,8 @@ interface Training {
   }
 }
 
-function TrainingLoading() {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-      {[...Array(3)].map((_, i) => (
-        <div key={i} className="rounded-xl bg-white p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200 animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-20 sm:w-24 mb-3"></div>
-          <div className="h-5 sm:h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
-          <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-        </div>
-      ))}
-    </div>
-  )
+interface TrainingAnnouncementsProps {
+  initialTrainings?: Training[]
 }
 
 function formatDate(dateString: string): string {
@@ -54,20 +40,9 @@ function formatDate(dateString: string): string {
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
 }
 
-export default function TrainingAnnouncements() {
-  const [trainings, setTrainings] = useState<Training[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    getTrainings()
-      .then(data => setTrainings(data?.slice(0, 3) || []))
-      .catch(() => setTrainings([]))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) {
-    return <TrainingLoading />
-  }
+export default function TrainingAnnouncements({ initialTrainings }: TrainingAnnouncementsProps) {
+  // Use server-provided data if available
+  const trainings = (initialTrainings?.slice(0, 3) || [])
 
 
   const EmptyCard = () => (

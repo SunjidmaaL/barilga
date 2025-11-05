@@ -7,6 +7,11 @@ export default function ComparisonTable() {
 
   return (
     <div className="space-y-6">
+      {title && (
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
+          {title}
+        </h3>
+      )}
       {/* Desktop Table View */}
       <div className="hidden lg:block rounded-xl bg-white shadow ring-1 ring-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
@@ -58,11 +63,11 @@ export default function ComparisonTable() {
             
             <div className="space-y-4">
               <div>
-                <p className="text-xs font-semibold text-gray-500 mb-2">{headers[1]}</p>
+                <p className="text-xs font-semibold text-gray-500 mb-2">{headers[1] || ''}</p>
                 <p className="text-sm text-gray-700 leading-relaxed">{row.col1 || '-'}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 mb-2">{headers[2]}</p>
+                <p className="text-xs font-semibold text-gray-500 mb-2">{headers[2] || ''}</p>
                 <p className="text-sm text-gray-700 leading-relaxed">{row.col2 || '-'}</p>
               </div>
             </div>
@@ -80,11 +85,11 @@ export default function ComparisonTable() {
             
             <div className="space-y-2 sm:space-y-3">
               <div>
-                <p className="text-xs font-semibold text-gray-500 mb-1">{headers[1]}</p>
+                <p className="text-xs font-semibold text-gray-500 mb-1">{headers[1] || ''}</p>
                 <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">{row.col1 || '-'}</p>
               </div>
               <div className="pt-2 border-t border-gray-100">
-                <p className="text-xs font-semibold text-gray-500 mb-1">{headers[2]}</p>
+                <p className="text-xs font-semibold text-gray-500 mb-1">{headers[2] || ''}</p>
                 <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">{row.col2 || '-'}</p>
               </div>
             </div>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { getTrainings } from '@/lib/strapi'
 import Link from 'next/link'
 import TrainingRegistrationModal from '@/components/TrainingRegistrationModal'
 
@@ -65,10 +64,9 @@ export default function TrainingDetailPage() {
       try {
         setLoading(true)
         
-        const allTrainings = await getTrainings()
-        
-        // Find the specific training by ID
-        const foundTraining = allTrainings?.find((item: Training) => item.id.toString() === trainingId)
+        // Use getTrainingById instead of fetching all trainings
+        const { getTrainingById } = await import('@/lib/strapi')
+        const foundTraining = await getTrainingById(trainingId)
         
         if (!foundTraining) {
           throw new Error('Сургалт олдсонгүй')

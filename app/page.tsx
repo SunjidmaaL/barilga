@@ -2,13 +2,19 @@ import HeroSlider from '@/components/HeroSlider'
 import HomepageNews from '@/components/HomepageNews'
 import MemberCategories from '@/components/MemberCategories'
 import TrainingAnnouncements from '@/components/TrainingAnnouncements'
+import { getSlides, getTrainings } from '@/lib/strapi'
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch data server-side to reduce client-side API calls
+  const [slides, trainings] = await Promise.all([
+    getSlides(),
+    getTrainings()
+  ])
 
   return (
     <>
       {/* Hero Slider */}
-      <HeroSlider />
+      <HeroSlider initialSlides={slides} />
 
       {/* Member Categories */}
       <section id="members" className="max-w-7xl mx-auto py-6 sm:py-8 md:py-16 lg:py-20 px-4 sm:px-6">
@@ -42,7 +48,7 @@ export default function HomePage() {
               Цааш үзэх →
             </a>
           </div>
-          <TrainingAnnouncements />
+          <TrainingAnnouncements initialTrainings={trainings} />
         </div>
       </section>
     </>
