@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 
-// Strapi-аас license-tables өгөгдөл татах функц
+// Server-side API route ашиглан өгөгдөл татах (Strapi-д шууд дуудлага хийхгүй)
+// API route нь server-side дээр cache хийгддэг, тиймээс Strapi API calls маш бага байна
 const getLicenseTables = async () => {
   try {
-    const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
-    const res = await fetch(`${API_URL}/api/license-tables?populate=*&sort=year:asc`, {
-      next: { revalidate: 60 }
-    });
+    // Next.js API route ашиглах - server-side дээр cache хийгддэг
+    const res = await fetch('/api/license-tables');
     
     if (!res.ok) {
-      console.error('Failed to fetch license-tables:', res.status, res.statusText);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to fetch license-tables:', res.status, res.statusText);
+      }
       throw new Error(`Failed to fetch license-tables: ${res.status}`);
     }
     
-    const data = await res.json();
+    const result = await res.json();
     
-    if (!data || !data.data) {
-      console.warn('No license-tables data received from API');
+    if (!result || !result.data) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('No license-tables data received from API');
+      }
       return [];
     }
     
-    return data.data;
+    return result.data;
   } catch (error) {
-    console.error('Error fetching license-tables:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching license-tables:', error);
+    }
     return [];
   }
 };
@@ -97,7 +102,9 @@ export default function DynamicReportTable() {
         setError('Strapi-д өгөгдөл олдсонгүй. Статик өгөгдөл харуулж байна.');
       }
     } catch (error) {
-      console.error('Strapi-аас өгөгдөл татахад алдаа:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Strapi-аас өгөгдөл татахад алдаа:', error);
+      }
       // Алдаа гарвал статик өгөгдөл харуулах
       const fallbackData: ReportData[] = [
         { id: 1, year: 2013, month: 15, total: 177, reported: 146, investigated: 31, resolved: 1 },
@@ -163,7 +170,9 @@ export default function DynamicReportTable() {
         throw new Error('Хадгалахад алдаа гарлаа');
       }
     } catch (error) {
-      console.error('Алдаа:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Алдаа:', error);
+      }
       alert('Алдаа гарлаа! Console-оо шалгана уу.');
       return null;
     } finally {
@@ -222,7 +231,9 @@ export default function DynamicReportTable() {
         setData(data.filter(row => row.id !== id));
       }
     } catch (error) {
-      console.error('Алдаа:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Алдаа:', error);
+      }
       alert('Устгахад алдаа гарлаа!');
     } finally {
       setLoading(false);

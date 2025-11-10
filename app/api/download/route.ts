@@ -30,7 +30,9 @@ export async function GET(request: NextRequest) {
         meta?.attributes?.url
       
       if (!urlFromMeta) {
-        console.error('File metadata structure:', JSON.stringify(meta, null, 2))
+        if (process.env.NODE_ENV === 'development') {
+          console.error('File metadata structure:', JSON.stringify(meta, null, 2))
+        }
         return NextResponse.json({ error: 'File URL not found for the given ID' }, { status: 404 })
       }
       
@@ -39,7 +41,9 @@ export async function GET(request: NextRequest) {
         ? urlFromMeta 
         : `${strapiBase}${urlFromMeta.startsWith('/') ? '' : '/'}${urlFromMeta}`
       
-      console.log('Resolved file URL:', resolvedUrl)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Resolved file URL:', resolvedUrl)
+      }
     }
 
     // Fetch the file from the resolved URL
@@ -54,7 +58,9 @@ export async function GET(request: NextRequest) {
     if (contentType.includes('application/json')) {
       // If we got JSON, we might have fetched the wrong endpoint
       const jsonData = await response.json()
-      console.error('Received JSON instead of file. Response:', JSON.stringify(jsonData, null, 2))
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Received JSON instead of file. Response:', JSON.stringify(jsonData, null, 2))
+      }
       
       // Try to extract URL from this JSON if it's metadata
       const fileUrlFromJson = jsonData?.url || jsonData?.data?.url || jsonData?.data?.attributes?.url
@@ -105,7 +111,9 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Download error:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Download error:', error)
+    }
     return NextResponse.json({ error: 'Failed to download file' }, { status: 500 })
   }
 }

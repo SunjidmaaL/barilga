@@ -16,39 +16,96 @@ export default async function LicensesPage() {
   try {
     const licensesData = await getLicenses()
     
+    // Debug logging in development (simplified)
+    if (process.env.NODE_ENV === 'development') {
+      if (!licensesData || licensesData.length === 0) {
+        console.warn('[Licenses Page] No licenses data received from Strapi API')
+      } else {
+        console.log(`[Licenses Page] Licenses data received: ${licensesData.length} items`)
+      }
+    }
+    
     if (licensesData && Array.isArray(licensesData)) {
-      licenses = licensesData.map(license => ({
-        id: license.id,
-        type: license.title || 'Тодорхойгүй',
-        number: license.licenseNumber || '',
-        issuedDate: license.issueDate || '',
-        validUntil: license.expiryDate || '',
-        issuedBy: license.issuer || 'Тодорхойгүй'
-      }))
+      licenses = licensesData.map(license => {
+        // Handle both Strapi v4 structure (attributes) and direct structure
+        const attrs = license.attributes || license
+        
+        // Try multiple possible field names for each property
+        const type = attrs?.title || attrs?.type || license.title || license.type || 'Тодорхойгүй'
+        const number = attrs?.licenseNumber || attrs?.number || attrs?.license_number || license.licenseNumber || license.number || ''
+        const issuedBy = attrs?.issuer || attrs?.issuedBy || attrs?.issued_by || attrs?.organization || license.issuer || license.issuedBy || 'Тодорхойгүй'
+        
+        // Format dates
+        const formatDate = (dateValue: any): string => {
+          if (!dateValue) return ''
+          
+          try {
+            let date: Date
+            
+            // Handle different date formats from Strapi
+            if (typeof dateValue === 'string') {
+              if (dateValue.includes('T') && dateValue.includes('Z')) {
+                // ISO format: "2025-10-09T14:38:02.340Z"
+                date = new Date(dateValue)
+              } else if (dateValue.includes('/')) {
+                // "MM/DD/YYYY" format
+                const parts = dateValue.split('/')
+                if (parts.length === 3) {
+                  const [month, day, year] = parts
+                  date = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`)
+                } else {
+                  date = new Date(dateValue)
+                }
+              } else {
+                date = new Date(dateValue)
+              }
+            } else {
+              date = new Date(dateValue)
+            }
+            
+            if (!isNaN(date.getTime())) {
+              return date.toLocaleDateString('mn-MN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })
+            }
+            
+            return dateValue.toString()
+          } catch (error) {
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('[Licenses Page] Date formatting error:', error, 'for value:', dateValue)
+            }
+            return dateValue.toString()
+          }
+        }
+        
+        const rawIssueDate = attrs?.issueDate || attrs?.issuedDate || attrs?.issue_date || attrs?.date || license.issueDate || license.issuedDate || ''
+        const rawValidUntil = attrs?.expiryDate || attrs?.validUntil || attrs?.expiry_date || attrs?.valid_until || attrs?.expiresAt || license.expiryDate || license.validUntil || ''
+        
+        const issuedDate = formatDate(rawIssueDate)
+        const validUntil = formatDate(rawValidUntil)
+        
+        
+        return {
+          id: license.id || license.documentId || Math.random(),
+          type,
+          number,
+          issuedDate,
+          validUntil,
+          issuedBy
+        }
+      })
     }
   } catch (err) {
-    console.error('Error fetching licenses:', err)
-    error = 'Лицензийн мэдээлэл татахад алдаа гарлаа'
-    
-    // Fallback data
-    licenses = [
-      {
-        id: 1,
-        type: 'Барилгын үйл ажиллагааны тусгай зөвшөөрөл',
-        number: 'БЗ-2023-001234',
-        issuedDate: '2023-03-15',
-        validUntil: '2026-03-15',
-        issuedBy: 'Хөдөлмөр, нийгмийн хамгааллын яам'
-      },
-      {
-        id: 2,
-        type: 'Материал нийлүүлэлтийн лиценз',
-        number: 'МН-2023-005678',
-        issuedDate: '2023-06-20',
-        validUntil: '2028-06-20',
-        issuedBy: 'Худалдаа аж үйлдвэрийн яам'
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Licenses Page] Error fetching licenses:', err)
+      if (err instanceof Error) {
+        console.error('[Licenses Page] Error message:', err.message)
+        console.error('[Licenses Page] Error stack:', err.stack)
       }
-    ] as License[]
+    }
+    error = 'Лицензийн мэдээлэл татахад алдаа гарлаа'
   }
 
   return (

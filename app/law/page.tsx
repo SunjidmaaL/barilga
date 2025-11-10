@@ -203,7 +203,17 @@ function getDocumentUrl(law: LawData): string {
 
 // Law content component
 async function LawContent() {
-  const lawsData: LawData[] = await getLaws()
+  try {
+    const lawsData: LawData[] = await getLaws() || []
+    
+    // Debug logging in development (simplified)
+    if (process.env.NODE_ENV === 'development') {
+      if (!lawsData || lawsData.length === 0) {
+        console.warn('[Law Page] No laws data received from Strapi API')
+      } else {
+        console.log(`[Law Page] Laws data received: ${lawsData.length} items`)
+      }
+    }
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8 sm:pb-12 md:pb-16">
@@ -503,7 +513,9 @@ async function LawContent() {
                           formattedDate = publishedDate.toString()
                         }
                       } catch (error) {
-                        console.error('Date formatting error:', error)
+                        if (process.env.NODE_ENV === 'development') {
+                          console.error('Date formatting error:', error)
+                        }
                         formattedDate = publishedDate.toString()
                       }
                     }
@@ -585,7 +597,9 @@ async function LawContent() {
                     formattedDate = publishedDate.toString()
                   }
                 } catch (error) {
-                  console.error('Mobile Date formatting error:', error)
+                  if (process.env.NODE_ENV === 'development') {
+                    console.error('Mobile Date formatting error:', error)
+                  }
                   formattedDate = publishedDate.toString()
                 }
               }
@@ -628,6 +642,26 @@ async function LawContent() {
       </div>
     </section>
   )
+  } catch (error) {
+    // If there's an error, still show the static content but without dynamic laws table
+    return (
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8 sm:pb-12 md:pb-16">
+        <div className="rounded-xl bg-white p-4 sm:p-6 md:p-8 shadow ring-1 ring-gray-200">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 flex items-center gap-2 sm:gap-3">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            Барилгын материалын үйлдвэрлэлийн хууль эрх зүйн орчин
+          </h2>
+          <div className="bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-400">
+            <p className="text-sm text-yellow-800">Хуулийн мэдээллийг ачаалахад алдаа гарлаа. Хуулийн мэдээлэл хэсгийг дахин шалгана уу.</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
 }
 
 export default function LawPage() {

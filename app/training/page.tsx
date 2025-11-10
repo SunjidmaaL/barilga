@@ -21,45 +21,123 @@ function TrainingLoading() {
 
 // Training content component
 async function TrainingContent() {
-  const trainingsData = await getTrainings()
-
-  return <TrainingList trainings={trainingsData || []} />
+  try {
+    const trainingsData = await getTrainings() || []
+    return <TrainingList trainings={Array.isArray(trainingsData) ? trainingsData : []} />
+  } catch (error) {
+    // If there's an error, show empty list
+    return <TrainingList trainings={[]} />
+  }
 }
 
 // Training Anket content component
 async function TrainingAnketContent() {
-  const anketData = await getTrainingAnkets()
-  
-  let fileUrl = ''
-  
-  if (anketData) {
-    const attrs = anketData.attributes || anketData
-    const file = attrs?.file || attrs?.anket || attrs?.form
+  try {
+    const anketData = await getTrainingAnkets()
     
-    // Get file URL
-    if (file) {
-      const url = file?.data?.attributes?.url || file?.url || file?.attributes?.url
-      if (url) {
-        fileUrl = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${url}`
+    let fileUrl = ''
+    
+    if (anketData) {
+      // Handle different Strapi data structures
+      const attrs = anketData.attributes || anketData
+      
+      // Try multiple possible field names for the file
+      const file = attrs?.file || attrs?.anket || attrs?.form || attrs?.document || attrs?.pdf
+      
+      // Get file URL - handle various Strapi response structures
+      if (file) {
+        // Case 1: file.data.attributes.url (Strapi v4 standard)
+        if (file?.data?.attributes?.url) {
+          fileUrl = file.data.attributes.url
+        }
+        // Case 2: file.data.url (alternative structure)
+        else if (file?.data?.url) {
+          fileUrl = file.data.url
+        }
+        // Case 3: file.attributes.url (nested attributes)
+        else if (file?.attributes?.url) {
+          fileUrl = file.attributes.url
+        }
+        // Case 4: file.url (direct URL)
+        else if (file?.url) {
+          fileUrl = file.url
+        }
+        // Case 5: Array of files (take first)
+        else if (Array.isArray(file?.data) && file.data.length > 0) {
+          const firstFile = file.data[0]
+          fileUrl = firstFile?.attributes?.url || firstFile?.url || ''
+        }
+        // Case 6: Direct array
+        else if (Array.isArray(file) && file.length > 0) {
+          const firstFile = file[0]
+          fileUrl = firstFile?.attributes?.url || firstFile?.data?.attributes?.url || firstFile?.url || ''
+        }
+        
+        // Prepend Strapi URL if relative path
+        if (fileUrl && !fileUrl.startsWith('http')) {
+          fileUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${fileUrl}`
+        }
       }
     }
+    
+    // Build download URL using the API route
+    const downloadUrl = fileUrl ? `/api/download?url=${encodeURIComponent(fileUrl)}` : '#'
+    
+    // Debug logging in development (simplified)
+    if (process.env.NODE_ENV === 'development') {
+      if (!anketData) {
+        console.warn('[Training Page] No anket data received from API')
+      } else if (!fileUrl) {
+        console.warn('[Training Page] Anket data received but no file URL found')
+      }
+    }
+    
+    // If no file URL, return disabled button
+    if (!fileUrl) {
+      return (
+        <button
+          disabled
+          className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-6 sm:py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed opacity-50"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span>Анкет байхгүй байна</span>
+        </button>
+      )
+    }
+    
+    return (
+      <a
+        href={downloadUrl}
+        download
+        className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 whitespace-nowrap"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Анкет татаж авах</span>
+      </a>
+    )
+  } catch (error) {
+    // Log error in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Training Page] Error in TrainingAnketContent:', error)
+    }
+    
+    // If there's an error, return disabled button
+    return (
+      <button
+        disabled
+        className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-6 sm:py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed opacity-50"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Анкет байхгүй байна</span>
+      </button>
+    )
   }
-  
-  // Build download URL using the API route
-  const downloadUrl = fileUrl ? `/api/download?url=${encodeURIComponent(fileUrl)}` : '#'
-  
-  return (
-    <a
-      href={downloadUrl}
-      download
-      className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 whitespace-nowrap"
-    >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-      <span>Анкет татаж авах</span>
-    </a>
-  )
 }
 
 export default function TrainingPage() {

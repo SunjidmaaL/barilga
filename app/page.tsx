@@ -6,10 +6,19 @@ import { getSlides, getTrainings } from '@/lib/strapi'
 
 export default async function HomePage() {
   // Fetch data server-side to reduce client-side API calls
-  const [slides, trainings] = await Promise.all([
+  // Use Promise.allSettled to handle errors gracefully
+  const results = await Promise.allSettled([
     getSlides(),
     getTrainings()
   ])
+  
+  // Extract data from results, handling errors gracefully
+  const slides = results[0].status === 'fulfilled' 
+    ? (Array.isArray(results[0].value) ? results[0].value : [])
+    : [];
+  const trainings = results[1].status === 'fulfilled' 
+    ? (Array.isArray(results[1].value) ? results[1].value : [])
+    : [];
 
   return (
     <>

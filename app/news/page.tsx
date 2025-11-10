@@ -51,9 +51,21 @@ function NewsLoading() {
 
 // News content component
 async function NewsContent() {
-  const newsData: NewsData[] = await getNews()
+  try {
+    const newsData: NewsData[] = await getNews() || []
 
-  if (!newsData || newsData.length === 0) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[News List Debug] News data:', {
+        count: newsData?.length || 0,
+        ids: newsData?.map((n: NewsData) => n.id) || [],
+        firstItem: newsData?.[0] ? {
+          id: newsData[0].id,
+          title: newsData[0].attributes?.title || newsData[0].title
+        } : null
+      });
+    }
+
+    if (!newsData || !Array.isArray(newsData) || newsData.length === 0) {
     return (
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         <div className="bg-indigo-50 rounded-2xl p-8 sm:p-12 md:p-16 text-center border border-indigo-200">
@@ -78,11 +90,14 @@ async function NewsContent() {
           // Get image URL from Strapi structure using helper function
           const image = news.attributes?.image || news.image
           const imageUrl = getImageUrl(image) || '/img/background.jpg'
+          
+          // Get news ID - handle both number and string
+          const newsId = news.id ? news.id.toString() : ''
 
           return (
             <NewsCard 
               key={news.id} 
-              id={news.id.toString()}
+              id={newsId}
               title={news.attributes?.title || news.title || 'Мэдээ'}
               description={news.attributes?.description || news.attributes?.content || news.description || news.content || 'Мэдээлэл байхгүй байна.'}
               date={(news.attributes?.publishedAt || news.publishedAt)
@@ -97,6 +112,27 @@ async function NewsContent() {
       </div>
     </section>
   )
+  } catch (error) {
+    // If there's an error, show empty state
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[News List Debug] Error:', error);
+    }
+    return (
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+        <div className="bg-indigo-50 rounded-2xl p-8 sm:p-12 md:p-16 text-center border border-indigo-200">
+          <div className="mx-auto mb-4 sm:mb-6 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-indigo-600 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+            </svg>
+          </div>
+          
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">
+            Мэдээ байхгүй байна
+          </h3>
+        </div>
+      </section>
+    )
+  }
 }
 
 export default function NewsPage() {

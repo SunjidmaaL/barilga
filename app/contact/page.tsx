@@ -10,47 +10,97 @@ interface ContactItem {
 }
 
 export default async function ContactPage() {
-  // Add a small delay to show loading state (remove in production)
-  // await new Promise(resolve => setTimeout(resolve, 1000))
+  // Fetch both in parallel to reduce total load time
+  // Use Promise.allSettled to handle errors gracefully
+  const results = await Promise.allSettled([
+    getContacts(),
+    getContactsHrs()
+  ])
   
-  const contacts = await getContacts()
-  const contactsHrs = await getContactsHrs()
+  // Extract data from results, handling errors gracefully
+  const contacts = results[0].status === 'fulfilled' ? results[0].value : null;
+  const contactsHrs = results[1].status === 'fulfilled' ? results[1].value : null;
   
+  // Debug logging in development (simplified)
+  if (process.env.NODE_ENV === 'development') {
+    if (!contacts || contacts.length === 0) {
+      console.warn('[Contact Page] No contacts data received from Strapi API')
+    } else {
+      console.log(`[Contact Page] Contacts data received: ${contacts.length} items`)
+    }
+    if (!contactsHrs || contactsHrs.length === 0) {
+      console.warn('[Contact Page] No contact hours data received from Strapi API')
+    } else {
+      console.log(`[Contact Page] Contact hours data received: ${contactsHrs.length} items`)
+    }
+  }
 
   // Transform API data to expected structure
-  const transformedContacts: ContactItem[] = contacts && Array.isArray(contacts) ? contacts.map((contact: any) => {
+  const transformedContacts: ContactItem[] = contacts && Array.isArray(contacts) && contacts.length > 0 ? contacts.map((contact: any) => {
+    // Handle both Strapi v4 structure (attributes) and direct structure
+    const attrs = contact.attributes || contact
+    
     const contactItems: ContactItem[] = []
     
-    if (contact.address) {
+    // Try multiple possible field names for each property
+    const address = attrs?.address || contact.address
+    const phone = attrs?.phone || contact.phone
+    const email = attrs?.email || contact.email
+    const fax = attrs?.fax || contact.fax
+    const website = attrs?.website || contact.website
+    
+    if (address) {
       contactItems.push({
-        id: `${contact.id}-address`,
+        id: `${contact.id || contact.documentId || Math.random()}-address`,
         label: 'Хаяг',
-        value: contact.address,
+        value: address,
         icon: 'location',
         iconBgColor: 'bg-indigo-100',
         iconColor: 'text-indigo-600'
       })
     }
     
-    if (contact.phone) {
+    if (phone) {
       contactItems.push({
-        id: `${contact.id}-phone`,
+        id: `${contact.id || contact.documentId || Math.random()}-phone`,
         label: 'Утас',
-        value: contact.phone,
+        value: phone,
         icon: 'phone',
         iconBgColor: 'bg-blue-100',
         iconColor: 'text-blue-600'
       })
     }
     
-    if (contact.email) {
+    if (email) {
       contactItems.push({
-        id: `${contact.id}-email`,
+        id: `${contact.id || contact.documentId || Math.random()}-email`,
         label: 'И-мэйл',
-        value: contact.email,
+        value: email,
         icon: 'email',
         iconBgColor: 'bg-green-100',
         iconColor: 'text-green-600'
+      })
+    }
+    
+    if (fax) {
+      contactItems.push({
+        id: `${contact.id || contact.documentId || Math.random()}-fax`,
+        label: 'Факс',
+        value: fax,
+        icon: 'fax',
+        iconBgColor: 'bg-purple-100',
+        iconColor: 'text-purple-600'
+      })
+    }
+    
+    if (website) {
+      contactItems.push({
+        id: `${contact.id || contact.documentId || Math.random()}-website`,
+        label: 'Вебсайт',
+        value: website,
+        icon: 'email',
+        iconBgColor: 'bg-blue-100',
+        iconColor: 'text-blue-600'
       })
     }
     
@@ -131,10 +181,22 @@ export default async function ContactPage() {
               {/* Team Information */}
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  {contactsHrs && Array.isArray(contactsHrs) && contactsHrs.length > 0 && contactsHrs
+                  {contactsHrs && Array.isArray(contactsHrs) && contactsHrs.length > 0 ? contactsHrs
+                    .map((contactHr: any) => {
+                      // Handle both Strapi v4 structure (attributes) and direct structure
+                      const attrs = contactHr.attributes || contactHr
+                      return {
+                        ...contactHr,
+                        name: attrs?.name || contactHr.name,
+                        position: attrs?.position || contactHr.position,
+                        phone: attrs?.phone || contactHr.phone,
+                        fax: attrs?.fax || contactHr.fax,
+                        order: attrs?.order || contactHr.order || 0
+                      }
+                    })
                     .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
                     .map((contactHr: any, index: number) => (
-                    <div key={contactHr.id || index} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div key={contactHr.id || contactHr.documentId || index} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <h4 className="font-semibold text-sm text-gray-900 mb-1">
@@ -178,7 +240,13 @@ export default async function ContactPage() {
                         )}
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                      <p className="text-sm text-gray-600 text-center">
+                        Одоогоор багийн мэдээлэл бэлэн болоогүй байна.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -94,9 +94,11 @@ export default function TrainingList({ trainings }: TrainingListProps) {
               </div>
               
               <div className="p-5">
-                <p className="text-xs text-gray-500">
-                  {formatDate(date)} • {location || 'Байршил тодорхойгүй'}
-                </p>
+                {date && (
+                  <p className="text-xs text-gray-500">
+                    {formatDate(date)}{location ? ` • ${location}` : ''}
+                  </p>
+                )}
                 <h4 className="mt-1 text-lg font-semibold text-gray-900 line-clamp-2">{title}</h4>
                 <p className="mt-2 text-gray-600 text-sm line-clamp-3">{description}</p>
                 {price && (

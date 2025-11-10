@@ -7,11 +7,6 @@ export default function ComparisonTable() {
 
   return (
     <div className="space-y-6">
-      {title && (
-        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
-          {title}
-        </h3>
-      )}
       {/* Desktop Table View */}
       <div className="hidden lg:block rounded-xl bg-white shadow ring-1 ring-gray-200 overflow-hidden">
         <div className="overflow-x-auto">

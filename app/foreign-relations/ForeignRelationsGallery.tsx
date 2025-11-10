@@ -37,8 +37,10 @@ export default function ForeignRelationsGallery({ images }: ForeignRelationsGall
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    onError={(e) => {
-                      console.error('Image load error:', image.url)
+                    onError={() => {
+                      if (process.env.NODE_ENV === 'development') {
+                        console.error('Image load error:', image.url)
+                      }
                     }}
                   />
                 </div>

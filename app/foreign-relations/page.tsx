@@ -2,16 +2,18 @@ import { getForeignRelationsImages, getImageUrl } from '@/lib/strapi'
 import ForeignRelationsGallery from './ForeignRelationsGallery'
 
 export default async function ForeignRelationsPage() {
-  // Fetch images from Strapi
-  const strapiImages = await getForeignRelationsImages()
-
-  // Debug: Log Strapi images
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Foreign Relations Images Debug:', {
-      strapiImagesLength: strapiImages?.length || 0,
-      strapiImages: strapiImages
-    })
-  }
+  try {
+    // Fetch images from Strapi
+    const strapiImages = await getForeignRelationsImages() || []
+    
+    // Debug logging in development (simplified)
+    if (process.env.NODE_ENV === 'development') {
+      if (!strapiImages || strapiImages.length === 0) {
+        console.warn('[Foreign Relations Page] No foreign relations data received from Strapi API')
+      } else {
+        console.log(`[Foreign Relations Page] Foreign relations data received: ${strapiImages.length} items`)
+      }
+    }
 
   // Process Strapi images - extract all images from foreign-relations items
   const processedImages: any[] = []
@@ -29,7 +31,7 @@ export default async function ForeignRelationsPage() {
     
     // Check if picture is an array (multiple images)
     if (Array.isArray(picture) && picture.length > 0) {
-      picture.forEach((imgItem: any) => {
+      picture.forEach((imgItem: any, imgIndex: number) => {
         let imageUrl = getImageUrl(imgItem)
         
         // If getImageUrl returns null, try direct extraction
@@ -37,7 +39,8 @@ export default async function ForeignRelationsPage() {
           const url = 
             imgItem?.url ||
             imgItem?.attributes?.url ||
-            imgItem?.data?.attributes?.url
+            imgItem?.data?.attributes?.url ||
+            imgItem?.data?.url
           
           if (url) {
             imageUrl = url.startsWith('http') ? url : `${API_URL}${url}`
@@ -52,7 +55,7 @@ export default async function ForeignRelationsPage() {
             imgItem?.attributes?.alt ||
             item?.title ||
             item?.attributes?.title ||
-            `Үйлдвэрийн зураг ${processedImages.length + 1}`
+            `Гадаад харилцааны зураг ${processedImages.length + 1}`
           
           const title = 
             item?.title ||
@@ -67,14 +70,6 @@ export default async function ForeignRelationsPage() {
             title: title,
             original: imgItem
           })
-          
-          if (process.env.NODE_ENV === 'development') {
-            console.log(`Image ${processedImages.length}:`, { 
-              imageUrl, 
-              altText, 
-              title
-            })
-          }
         }
       })
     } 
@@ -83,17 +78,27 @@ export default async function ForeignRelationsPage() {
       let imageUrl = getImageUrl(picture)
       
       // If getImageUrl returns null, try direct URL extraction
-      if (!imageUrl && picture.url) {
-        imageUrl = picture.url.startsWith('http') ? picture.url : `${API_URL}${picture.url}`
+      if (!imageUrl) {
+        const url = 
+          picture?.url ||
+          picture?.data?.url ||
+          picture?.data?.attributes?.url ||
+          picture?.attributes?.url
+        
+        if (url) {
+          imageUrl = url.startsWith('http') ? url : `${API_URL}${url}`
+        }
       }
       
       if (imageUrl) {
         const altText = 
           picture?.alternativeText ||
           picture?.alt ||
+          picture?.data?.attributes?.alternativeText ||
+          picture?.data?.alternativeText ||
           item?.title ||
           item?.attributes?.title ||
-          `Үйлдвэрийн зураг ${processedImages.length + 1}`
+          `Гадаад харилцааны зураг ${processedImages.length + 1}`
         
         const title = 
           item?.title ||
@@ -107,29 +112,6 @@ export default async function ForeignRelationsPage() {
           alt: altText,
           title: title,
           original: picture
-        })
-        
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`Image ${processedImages.length}:`, { 
-            imageUrl, 
-            altText, 
-            title
-          })
-        }
-      } else {
-        if (process.env.NODE_ENV === 'development') {
-          console.warn(`No image URL found for item ${itemIndex + 1}:`, {
-            picture,
-            item
-          })
-        }
-      }
-    }
-    else {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(`No picture found for item ${itemIndex + 1}:`, {
-          itemKeys: Object.keys(item || {}),
-          item
         })
       }
     }
@@ -145,11 +127,13 @@ export default async function ForeignRelationsPage() {
            !img.url.includes('null')
   })
 
-  // Debug: Log processed images
+  // Debug logging for processed images (simplified)
   if (process.env.NODE_ENV === 'development') {
-    console.log('Processed Images:', validImages)
-    console.log('Processed Images Count:', validImages.length)
-    console.log('All processed images (including invalid):', processedImages)
+    if (validImages.length === 0) {
+      console.warn(`[Foreign Relations Page] No valid images found from ${strapiImages.length} items`)
+    } else {
+      console.log(`[Foreign Relations Page] Processed ${validImages.length} valid images from ${strapiImages.length} items`)
+    }
   }
 
   // Use Strapi images if available, otherwise use empty array (no fallback)
@@ -192,4 +176,21 @@ export default async function ForeignRelationsPage() {
       </section>
     </div>
   )
+  } catch (error) {
+    // If there's an error, show page with empty gallery
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 pb-8 sm:pb-12 md:pb-16">
+          <div className="bg-white rounded-xl p-6 sm:p-8 md:p-10 shadow-lg ring-1 ring-gray-200">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Гадаад харилцаа
+            </h2>
+            <div className="bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-400">
+              <p className="text-sm text-yellow-800">Зургийн мэдээллийг ачаалахад алдаа гарлаа. Дахин оролдоно уу.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    )
+  }
 }

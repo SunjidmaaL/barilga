@@ -12,7 +12,9 @@ export async function POST(request: NextRequest) {
       data: result 
     })
   } catch (error) {
-    console.error('Training registration API error:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Training registration API error:', error)
+    }
     
     return NextResponse.json(
       { 

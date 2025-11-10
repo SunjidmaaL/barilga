@@ -42,7 +42,10 @@ function formatDate(dateString: string): string {
 
 export default function TrainingAnnouncements({ initialTrainings }: TrainingAnnouncementsProps) {
   // Use server-provided data if available
-  const trainings = (initialTrainings?.slice(0, 3) || [])
+  // Ensure trainings is always an array
+  const trainings = (initialTrainings && Array.isArray(initialTrainings) && initialTrainings.length > 0) 
+    ? initialTrainings.slice(0, 3) 
+    : []
 
 
   const EmptyCard = () => (
@@ -84,7 +87,10 @@ export default function TrainingAnnouncements({ initialTrainings }: TrainingAnno
         
         // Get location
         const location = attrs?.location || training.location || ''
-        const dateLocation = [formatDate(date), location].filter(Boolean).join(' • ')
+        // Only include location if it exists, otherwise just show date
+        const dateLocation = location 
+          ? `${formatDate(date)} • ${location}` 
+          : formatDate(date)
         
         // Get price
         const price = attrs?.price || training.price

@@ -27,7 +27,8 @@ interface HeroSliderProps {
 
 export default function HeroSlider({ initialSlides }: HeroSliderProps) {
   // Use server-provided data if available, otherwise use defaults
-  const slides = initialSlides || []
+  // Ensure slides is always an array
+  const slides = (initialSlides && Array.isArray(initialSlides) && initialSlides.length > 0) ? initialSlides : []
 
   const displaySlides = slides.length > 0 ? slides : defaultSlides
   const hasMultiple = displaySlides.length > 1

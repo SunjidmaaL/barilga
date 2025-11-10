@@ -1,16 +1,26 @@
 import { getExpertTeams, getExpertTeamImages, getImageUrl } from '@/lib/strapi'
 
 export default async function ExpertTeamPage() {
-  // Try to fetch from expert-teams first, then fallback to expert-team-images
-  let imagesData = await getExpertTeams()
-  
-  // If expert-teams doesn't have image data, try expert-team-images
-  if (!imagesData || imagesData.length === 0) {
-    imagesData = await getExpertTeamImages()
-  }
-  
-  // Get the first 3 images
-  const images = imagesData?.slice(0, 3) || []
+  try {
+    // Try to fetch from expert-teams first, then fallback to expert-team-images
+    // Use Promise.allSettled to handle errors gracefully
+    const results = await Promise.allSettled([
+      getExpertTeams(),
+      getExpertTeamImages()
+    ])
+    
+    // Extract data from results, handling errors gracefully
+    let imagesData = results[0].status === 'fulfilled' ? results[0].value : null
+    
+    // If expert-teams doesn't have image data, try expert-team-images
+    if (!imagesData || !Array.isArray(imagesData) || imagesData.length === 0) {
+      imagesData = results[1].status === 'fulfilled' ? results[1].value : null
+    }
+    
+    // Get the first 3 images - ensure imagesData is an array
+    const images = (imagesData && Array.isArray(imagesData) && imagesData.length > 0) 
+      ? imagesData.slice(0, 3) 
+      : []
   
   // Process images to extract URL and alt text
   const processedImages = images.map((item: any, index: number) => {
@@ -25,8 +35,6 @@ export default async function ExpertTeamPage() {
     const imageUrl = getImageUrl(imageData)
     const altText = item.alt || `Expert Team Image ${index + 1}`
     
-    // console.log(`Image ${index + 1}:`, { imageData, imageUrl, altText })
-    
     return {
       url: imageUrl,
       alt: altText,
@@ -36,16 +44,6 @@ export default async function ExpertTeamPage() {
   
   // Filter valid Strapi images
   const validStrapiImages = processedImages.filter((img: any) => img.url)
-  
-  // Debug: Log Strapi images
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Expert Team Images Debug:', {
-      imagesDataLength: imagesData?.length || 0,
-      processedImagesLength: processedImages.length,
-      validStrapiImagesLength: validStrapiImages.length,
-      validStrapiImages: validStrapiImages.map((img: any) => ({ url: img.url, alt: img.alt }))
-    })
-  }
   
   // Fallback images if Strapi data is not available
   const fallbackImages = [
@@ -285,5 +283,22 @@ export default async function ExpertTeamPage() {
         </div>
       </section>
     </div>
-  );
+  )
+  } catch (error) {
+    // If there's an error, show page with fallback images
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <section className="py-6 sm:py-8 md:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow ring-1 ring-gray-200">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+              Экспертийн баг
+            </h2>
+            <div className="bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-400">
+              <p className="text-sm text-yellow-800">Мэдээллийг ачаалахад алдаа гарлаа. Дахин оролдоно уу.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    )
+  }
 }

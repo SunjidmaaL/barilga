@@ -1,11 +1,9 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { getTrainingById, getTrainings, getImageUrl } from '@/lib/strapi'
 import Link from 'next/link'
-import TrainingRegistrationModal from '@/components/TrainingRegistrationModal'
+import { notFound } from 'next/navigation'
+import Image from 'next/image'
 
-interface Training {
+interface TrainingItem {
   id: number
   attributes?: {
     title?: string
@@ -15,6 +13,7 @@ interface Training {
     location?: string
     price?: number
     registration_url?: string
+    publishedAt?: string
     image?: {
       data?: {
         attributes?: {
@@ -26,7 +25,6 @@ interface Training {
     createdAt?: string
     updatedAt?: string
   }
-  // Fallback properties for direct data structure
   title?: string
   description?: string
   content?: string
@@ -35,6 +33,7 @@ interface Training {
   price?: number
   registration_url?: string
   image?: any
+  publishedAt?: string
   createdAt?: string
   updatedAt?: string
 }
@@ -49,125 +48,287 @@ function formatDate(dateString: string): string {
   return `${year}.${month}.${day}`
 }
 
-export default function TrainingDetailPage() {
-  const params = useParams()
-  const trainingId = params?.id as string
-  const [training, setTraining] = useState<Training | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+// Helper function to escape HTML
+function escapeHtml(text: string): string {
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }
+  return text.replace(/[&<>"']/g, (m) => map[m])
+}
 
-  useEffect(() => {
-    const loadTraining = async () => {
-      if (!trainingId) return
+export async function generateStaticParams() {
+  try {
+    const trainings = await getTrainings()
+    return trainings?.map((item: TrainingItem) => ({
+      id: item.id.toString(),
+    })) || []
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error generating static params:', error)
+    }
+    return []
+  }
+}
 
-      try {
-        setLoading(true)
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const trainingItem = await getTrainingById(params.id)
+  
+  if (!trainingItem) {
+    return {
+      title: 'Сургалт олдсонгүй',
+    }
+  }
+
+  const attributes = trainingItem.attributes || trainingItem
+  const title = attributes?.title || 'Сургалт'
+  const description = attributes?.description || attributes?.content || ''
+
+  return {
+    title,
+    description,
+  }
+}
+
+// Helper function to render Strapi Rich Text content
+function renderStrapiContent(content: any): string {
+  if (!content) return ''
+  
+  // If content is already a string (HTML or plain text), return it
+  if (typeof content === 'string') {
+    // Trim whitespace
+    const trimmed = content.trim()
+    if (!trimmed) return ''
+    
+    // If it's plain text without HTML tags, wrap in paragraph and preserve line breaks
+    if (!/<[a-z][\s\S]*>/i.test(trimmed)) {
+      // Split by newlines and wrap each line in paragraph
+      const lines = trimmed.split(/\n+/).filter(line => line.trim())
+      if (lines.length === 0) return ''
+      if (lines.length === 1) {
+        return `<p>${escapeHtml(lines[0])}</p>`
+      }
+      return lines.map(line => `<p>${escapeHtml(line.trim())}</p>`).join('')
+    }
+    // It's HTML, return as is
+    return trimmed
+  }
+  
+  // If content is a Strapi Rich Text JSON structure (array of blocks)
+  if (typeof content === 'object' && Array.isArray(content)) {
+    const rendered = renderRichTextBlocks(content)
+    if (rendered) return rendered
+  }
+  
+  // If content has a blocks property (Strapi v4 Rich Text structure)
+  if (content && typeof content === 'object' && content.blocks) {
+    const rendered = renderRichTextBlocks(content.blocks)
+    if (rendered) return rendered
+  }
+  
+  // If content is an object but not a recognized structure, try to extract text
+  if (typeof content === 'object' && content !== null) {
+    // Try to extract text from common properties
+    if (content.text) {
+      return `<p>${escapeHtml(String(content.text))}</p>`
+    }
+    if (content.content) {
+      return renderStrapiContent(content.content)
+    }
+    // Try to stringify and extract meaningful content
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Training Detail] Unknown content structure, trying to extract:', Object.keys(content))
+    }
+  }
+  
+  return ''
+}
+
+// Helper function to render Strapi Rich Text blocks to HTML
+function renderRichTextBlocks(blocks: any[]): string {
+  if (!Array.isArray(blocks) || blocks.length === 0) return ''
+  
+  return blocks.map((block) => {
+    if (!block || typeof block !== 'object') return ''
+    
+    switch (block.type) {
+      case 'paragraph':
+        const paraContent = renderInlineNodes(block.children || [])
+        return paraContent ? `<p>${paraContent}</p>` : ''
+      case 'heading':
+        const level = block.level || 1
+        const headingTag = `h${Math.min(Math.max(level, 1), 6)}`
+        const headingContent = renderInlineNodes(block.children || [])
+        return headingContent ? `<${headingTag}>${headingContent}</${headingTag}>` : ''
+      case 'list':
+        const listTag = block.format === 'ordered' ? 'ol' : 'ul'
+        const items = (block.children || [])
+          .filter((item: any) => item && item.children)
+          .map((item: any) => {
+            const itemContent = renderInlineNodes(item.children || [])
+            return itemContent ? `<li>${itemContent}</li>` : ''
+          })
+          .filter(Boolean)
+          .join('')
+        return items ? `<${listTag}>${items}</${listTag}>` : ''
+      case 'quote':
+        const quoteContent = renderInlineNodes(block.children || [])
+        return quoteContent ? `<blockquote>${quoteContent}</blockquote>` : ''
+      case 'code':
+        const codeContent = renderInlineNodes(block.children || [])
+        return codeContent ? `<pre><code>${escapeHtml(codeContent)}</code></pre>` : ''
+      case 'link':
+        const url = block.url || block.href || '#'
+        const linkContent = renderInlineNodes(block.children || [])
+        return linkContent ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${linkContent}</a>` : ''
+      case 'image':
+        // Handle Strapi image structure
+        let imageUrl = ''
+        let imageAlt = block.alt || ''
         
-        // Use getTrainingById instead of fetching all trainings
-        const { getTrainingById } = await import('@/lib/strapi')
-        const foundTraining = await getTrainingById(trainingId)
-        
-        if (!foundTraining) {
-          throw new Error('Сургалт олдсонгүй')
+        // Try different image URL locations
+        if (block.url) {
+          imageUrl = block.url
+        } else if (block.src) {
+          imageUrl = block.src
+        } else if (block.image?.url) {
+          imageUrl = block.image.url
+        } else if (block.image?.data?.attributes?.url) {
+          imageUrl = block.image.data.attributes.url
+        } else if (block.image?.data?.url) {
+          imageUrl = block.image.data.url
         }
         
-        setTraining(foundTraining)
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
-        setError(`Мэдээллийг ачаалахад алдаа гарлаа: ${errorMessage}`)
-      } finally {
-        setLoading(false)
-      }
+        // Get alt text
+        if (!imageAlt) {
+          imageAlt = block.image?.alternativeText || block.image?.data?.attributes?.alternativeText || ''
+        }
+        
+        // If image URL is relative, prepend Strapi API URL
+        const fullImageUrl = imageUrl && !imageUrl.startsWith('http') 
+          ? `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`
+          : imageUrl
+        
+        return fullImageUrl ? `<img src="${escapeHtml(fullImageUrl)}" alt="${escapeHtml(imageAlt)}" class="max-w-full h-auto my-4 rounded-lg" />` : ''
+      default:
+        // For unknown block types, try to render children
+        if (block.children && Array.isArray(block.children)) {
+          return renderInlineNodes(block.children)
+        }
+        return ''
     }
+  }).filter(Boolean).join('')
+}
 
-    loadTraining()
-  }, [trainingId])
+// Helper function to render inline nodes (text, bold, italic, etc.)
+function renderInlineNodes(nodes: any[]): string {
+  if (!Array.isArray(nodes)) return ''
+  
+  return nodes.map((node) => {
+    if (node.type === 'text') {
+      let text = escapeHtml(node.text || '')
+      // Apply formatting in correct order (nested formatting support)
+      const formats = []
+      if (node.bold) formats.push(['strong', '</strong>'])
+      if (node.italic) formats.push(['em', '</em>'])
+      if (node.underline) formats.push(['u', '</u>'])
+      if (node.strikethrough) formats.push(['s', '</s>'])
+      if (node.code) formats.push(['code', '</code>'])
+      
+      // Apply formats
+      formats.forEach(([openTag, closeTag]) => {
+        text = `<${openTag}>${text}</${openTag}>`
+      })
+      
+      return text
+    }
+    if (node.type === 'link') {
+      const url = node.url || '#'
+      const linkText = renderInlineNodes(node.children || [])
+      return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${linkText}</a>`
+    }
+    return ''
+  }).join('')
+}
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/4 mb-8"></div>
-            <div className="aspect-[16/9] bg-gray-200 rounded-lg mb-8"></div>
-            <div className="space-y-4">
-              <div className="h-4 bg-gray-200 rounded w-full"></div>
-              <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-              <div className="h-4 bg-gray-200 rounded w-4/6"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+export default async function TrainingDetailPage({ params }: { params: { id: string } }) {
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Training Detail Page] Loading training with ID: ${params.id}`);
   }
+  
+  const trainingItem = await getTrainingById(params.id)
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Алдаа гарлаа</h1>
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-medium text-red-800 mb-2">Сургалт олдсонгүй</h3>
-              <p className="text-red-600">{error}</p>
-            </div>
-            <Link 
-              href="/training" 
-              className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Сургалтын жагсаалт руу буцах
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+  if (!trainingItem) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`[Training Detail Page] Training item with ID ${params.id} not found`);
+      console.error(`[Training Detail Page] This means getTrainingById() returned null`);
+    }
+    notFound()
   }
-
-  if (!training) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Сургалт олдсонгүй</h1>
-            <p className="text-gray-600 mb-8">Хүссэн сургалт олдсонгүй байна.</p>
-            <Link 
-              href="/training" 
-              className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Сургалтын жагсаалт руу буцах
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Training Detail Page] Training item loaded successfully:`, {
+      id: trainingItem.id,
+      hasAttributes: !!trainingItem.attributes,
+      title: trainingItem.attributes?.title || trainingItem.title
+    });
   }
 
   // Safe access to training data with fallbacks
-  const attributes = training.attributes || training
-  const title = attributes?.title || 'Untitled Training'
-  const description = attributes?.description || ''
-  const content = attributes?.content || description
-  const date = attributes?.date || ''
-  const location = attributes?.location || ''
-  const price = attributes?.price
-  const image = attributes?.image
+  const attributes = trainingItem.attributes || trainingItem
+  const title = attributes?.title || trainingItem.title || 'Untitled Training'
+  const description = attributes?.description || trainingItem.description || ''
   
-  // Get image URL from Strapi structure
-  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
-  let imageUrl = '/img/training1.jpg'
-  let imageAlt = title
+  // Get content from multiple possible locations
+  // Strapi Rich Text field might return HTML string or JSON structure
+  const rawContent = attributes?.content || trainingItem.content || ''
   
-  if (image && 'data' in image && image.data?.attributes?.url) {
-    const url = image.data.attributes.url
-    imageUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`
-    imageAlt = image.data.attributes.alternativeText || title
-  } else if (image && 'url' in image && image.url) {
-    const url = image.url
-    imageUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`
-    imageAlt = image.alternativeText || title
+  // Debug logging in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Training Detail Debug] Raw content:', {
+      hasContent: !!rawContent,
+      contentType: typeof rawContent,
+      contentLength: rawContent ? String(rawContent).length : 0,
+      isString: typeof rawContent === 'string',
+      isArray: Array.isArray(rawContent),
+      isObject: typeof rawContent === 'object' && rawContent !== null,
+      contentPreview: typeof rawContent === 'string' 
+        ? rawContent.substring(0, 100) 
+        : JSON.stringify(rawContent).substring(0, 100),
+      hasDescription: !!description,
+      descriptionLength: description ? description.length : 0
+    });
   }
+  
+  // Render content (handles both HTML strings and Strapi Rich Text JSON)
+  // If content is empty, try to use description as fallback
+  const contentToRender = rawContent || description || ''
+  const content = renderStrapiContent(contentToRender)
+  
+  // Check if description is the same as content (to avoid showing duplicate)
+  const isDescriptionSameAsContent = description && rawContent && 
+    description.trim() === (typeof rawContent === 'string' ? rawContent.trim() : '')
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Training Detail Debug] Rendered content:', {
+      hasRenderedContent: !!content,
+      contentLength: content ? content.length : 0,
+      contentPreview: content ? content.substring(0, 200) : '',
+      isDescriptionSameAsContent,
+      usedDescriptionAsFallback: !rawContent && !!description
+    });
+  }
+  
+  const date = attributes?.date || attributes?.publishedAt || attributes?.createdAt || trainingItem.date || trainingItem.publishedAt || trainingItem.createdAt || ''
+  const location = attributes?.location || trainingItem.location || ''
+  const price = attributes?.price || trainingItem.price
+  const registration_url = attributes?.registration_url || trainingItem.registration_url || ''
+  const image = attributes?.image || trainingItem.image
+  const imageUrl = getImageUrl(image) || '/img/training1.jpg'
+  const imageAlt = image?.data?.attributes?.alternativeText || image?.alternativeText || attributes?.image?.data?.attributes?.alternativeText || title
   
   // Format date
   const formattedDate = formatDate(date)
@@ -191,16 +352,18 @@ export default function TrainingDetailPage() {
         {/* Article */}
         <article className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* Image */}
-          <div className="aspect-[16/9] w-full relative bg-gray-100 overflow-hidden">
-            <img 
-              className="w-full h-full object-cover" 
-              src={imageUrl}
-              alt={imageAlt}
-              onError={(e) => {
-                e.currentTarget.src = '/img/training1.jpg'
-              }}
-            />
-          </div>
+          {imageUrl && (
+            <div className="aspect-[16/9] w-full relative bg-gray-100 overflow-hidden">
+              <Image 
+                className="object-cover" 
+                src={imageUrl}
+                alt={imageAlt || title}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
+              />
+            </div>
+          )}
 
           {/* Content */}
           <div className="p-4 sm:p-6 md:p-8">
@@ -236,15 +399,39 @@ export default function TrainingDetailPage() {
             {/* Title */}
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">{title}</h1>
             
-            {/* Description */}
-            {description && (
-              <p className="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6 leading-relaxed">{description}</p>
+            {/* Description - Only show if it's different from content */}
+            {description && !isDescriptionSameAsContent && rawContent && content && content.trim() && (
+              <p className="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6 leading-relaxed italic">
+                {description}
+              </p>
             )}
             
             {/* Content */}
-            {content && content !== description && (
-              <div className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {content}
+            {content && content.trim() ? (
+              <div 
+                className="training-content text-sm sm:text-base text-gray-700 leading-relaxed mt-4 sm:mt-6"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            ) : (
+              <div className="text-gray-500 text-center py-8">
+                <p>Мэдээлэл байхгүй байна.</p>
+              </div>
+            )}
+
+            {/* Registration Button */}
+            {registration_url && (
+              <div className="mt-6 sm:mt-8 pt-6 border-t border-gray-200">
+                <a
+                  href={registration_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Бүртгүүлэх
+                </a>
               </div>
             )}
           </div>
