@@ -111,7 +111,18 @@ nextjs-project/
 4. Redeploy хийх
 5. Strapi дээр Public role-д find permissions идэвхжүүлэх
 
-**Дэлгэрэнгүй**: `VERCEL_DEPLOYMENT.md` файлыг үзнэ үү
+**Дэлгэрэнгүй**: 
+- `VERCEL_DEPLOYMENT.md` - Vercel deployment зааварчилгаа
+- `STRAPI_API_OPTIMIZATION.md` - API calls багасгах зааварчилгаа
+
+### API Calls Optimization
+
+Strapi API calls багасгахын тулд cache хугацааг уртасгасан:
+- Мэдээ, Сургалт: 24 цаг cache
+- Хууль, Лиценз: 48 цаг cache
+- Холбоо барих, Слайд: 7 хоног cache
+
+**Дэлгэрэнгүй**: `STRAPI_API_OPTIMIZATION.md` файлыг үзнэ үү
 
 ### Other Platforms
 1. Build the project: `npm run build`

@@ -32,7 +32,8 @@ const nextConfig = {
     ],
     // Optimize images in production
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    // Increased cache TTL to reduce API calls (7 days = 604800 seconds)
+    minimumCacheTTL: 604800,
   },
   
   // Suppress Node.js deprecation warnings in webpack
