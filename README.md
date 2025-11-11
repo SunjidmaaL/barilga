@@ -104,11 +104,19 @@ nextjs-project/
 ### Vercel (Recommended)
 1. Push your code to GitHub
 2. Connect your repository to Vercel
-3. Deploy automatically
+3. **Environment Variables тохируулах** (Чухал!):
+   - Vercel Dashboard → Settings → Environment Variables
+   - `NEXT_PUBLIC_STRAPI_URL` = `https://effortless-luck-023aebe70f.strapiapp.com`
+   - `STRAPI_API_TOKEN` = (Strapi API token, хэрэв шаардлагатай бол)
+4. Redeploy хийх
+5. Strapi дээр Public role-д find permissions идэвхжүүлэх
+
+**Дэлгэрэнгүй**: `VERCEL_DEPLOYMENT.md` файлыг үзнэ үү
 
 ### Other Platforms
 1. Build the project: `npm run build`
 2. Deploy the `.next` folder to your hosting platform
+3. Environment variables тохируулах
 
 ## Browser Support
 
