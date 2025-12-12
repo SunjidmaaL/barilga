@@ -152,7 +152,7 @@ export default function TrainingPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0112 21.5 12.083 12.083 0 015.84 10.578L12 14z" />
               </svg>
             </div>
-            МБМҮХолбооны дэргэдэх сургалтын "БМҮС" ХХК
+            МБМҮХолбооны дэргэдэх сургалтын төв ХХК
           </h2>
 
           <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-700 text-justify leading-relaxed">
