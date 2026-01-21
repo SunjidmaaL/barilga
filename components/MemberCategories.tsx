@@ -27,7 +27,7 @@ export default function MemberCategories() {
     },
     {
       id: 2,
-      title: 'Төслүүд',
+      title: 'Гишүүн байгууллагууд',
       color: 'from-purple-500 to-pink-500',
       gradient: 'bg-gradient-to-br from-purple-50 to-pink-50',
       href: '/projects',

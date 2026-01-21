@@ -10,33 +10,35 @@ interface NewsCardProps {
   date: string
   image: string
   alt: string
+  hrefPrefix?: string
 }
 
-export default function NewsCard({ id, title, description, date, image, alt }: NewsCardProps) {
+export default function NewsCard({ id, title, description, date, image, alt, hrefPrefix = 'news' }: NewsCardProps) {
   const [viewCount, setViewCount] = useState(0)
+  const storageKey = `${hrefPrefix}-${id}`
 
   useEffect(() => {
     try {
       const counts = JSON.parse(localStorage.getItem('newsViewCounts') || '{}')
-      setViewCount(counts[id] || 0)
+      setViewCount(counts[storageKey] || 0)
     } catch {
       setViewCount(0)
     }
-  }, [id])
+  }, [storageKey])
 
   const handleClick = () => {
     try {
       const counts = JSON.parse(localStorage.getItem('newsViewCounts') || '{}')
-      counts[id] = (counts[id] || 0) + 1
+      counts[storageKey] = (counts[storageKey] || 0) + 1
       localStorage.setItem('newsViewCounts', JSON.stringify(counts))
-      setViewCount(counts[id])
+      setViewCount(counts[storageKey])
     } catch {
       // Ignore errors
     }
   }
 
   return (
-    <Link href={`/news/${id}`} onClick={handleClick}>
+    <Link href={`/${hrefPrefix}/${id}`} onClick={handleClick}>
       <article className="group rounded-xl bg-white shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden">
         <div className="aspect-[16/10] w-full bg-gray-100">
           <img 
