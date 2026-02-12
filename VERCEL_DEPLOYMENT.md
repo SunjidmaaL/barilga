@@ -36,17 +36,18 @@ Strapi admin panel дээр дараах permissions тохируулах:
 
 1. Strapi admin panel руу орох: `https://effortless-luck-023aebe70f.strapiapp.com/admin`
 2. Settings → Users & Permissions plugin → Roles → Public
-3. Дараах content types-ууд дээр **find** permission идэвхжүүлэх:
-   - `news2` - find
-   - `trainings` - find
+3. Дараах content types-ууд дээр **find** болон **findOne** permissions идэвхжүүлэх:
+   - `news2` - find, findOne
+   - `trainings` - find, findOne
    - `contacts` - find
    - `contact-hrs` - find
-   - `licenses` - find
-   - `laws` - find
+   - `licenses` - find, findOne
+   - `laws` - find, findOne
    - `slides` - find
    - `expert-teams` - find
    - `foreign-relations` - find
    - `training-ankets` - find
+   - `member-news1` - find, findOne ⚠️ **Шинэ нэмэгдсэн**
 
 ## 3. CORS тохиргоо
 

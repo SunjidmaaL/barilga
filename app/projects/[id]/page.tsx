@@ -162,8 +162,26 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const newsItem = await getMemberNewsById(params.id)
-  
+  // Эхлээд ганц item-ийг API-аар авахыг оролдоно
+  let newsItem = await getMemberNewsById(params.id)
+
+  // Хэрэв /member-news/:id 404 өгвөл, жагсаалтын API-аас fallback хийж хайна
+  if (!newsItem) {
+    try {
+      const list = await getMemberNews()
+      if (Array.isArray(list)) {
+        newsItem = list.find((item: any, index: number) => {
+          const itemId = item.id ?? item.documentId ?? index
+          return String(itemId) === params.id
+        })
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Member News] generateMetadata fallback error:', error)
+      }
+    }
+  }
+
   if (!newsItem) {
     return {
       title: 'Мэдээ олдсонгүй',
@@ -181,7 +199,25 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 }
 
 export default async function MemberNewsDetailPage({ params }: { params: { id: string } }) {
-  const newsItem = await getMemberNewsById(params.id)
+  // Эхлээд /member-news/:id endpoint-оор авахаар оролдоно
+  let newsItem = await getMemberNewsById(params.id)
+
+  // Хэрэв олдохгүй бол жагсаалтаас fallback байдлаар хайна
+  if (!newsItem) {
+    try {
+      const list = await getMemberNews()
+      if (Array.isArray(list)) {
+        newsItem = list.find((item: any, index: number) => {
+          const itemId = item.id ?? item.documentId ?? index
+          return String(itemId) === params.id
+        })
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Member News] Detail page fallback error:', error)
+      }
+    }
+  }
 
   if (!newsItem) {
     notFound()
@@ -229,7 +265,7 @@ export default async function MemberNewsDetailPage({ params }: { params: { id: s
           )}
 
           <div className="p-4 sm:p-6 md:p-8">
-            <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">{formattedDate}</p>
+            {/* Огноо харуулахгүй болгосон */}
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">{title}</h1>
 
             {description && rawContent && (

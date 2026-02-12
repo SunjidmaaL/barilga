@@ -4,6 +4,7 @@ import { getMemberNews, getImageUrl } from '@/lib/strapi'
 
 interface MemberNewsItem {
   id: number | string
+  documentId?: number | string
   attributes?: {
     title?: string
     description?: string
@@ -41,7 +42,30 @@ function MemberNewsLoading() {
 }
 
 async function MemberNewsContent() {
-  const news = await getMemberNews()
+  let news: MemberNewsItem[] = []
+ 
+  try {
+    const result = await getMemberNews()
+    news = (Array.isArray(result) ? result : []) as MemberNewsItem[]
+    
+    // Debug logging in development
+    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_STRAPI === 'true') {
+      console.log('[Projects Page] Member news fetched:', {
+        count: news?.length || 0,
+        isArray: Array.isArray(news),
+        firstItem: news?.[0] ? {
+          id: news[0].id,
+          hasAttributes: !!news[0].attributes,
+          title: news[0].attributes?.title || news[0].title
+        } : null
+      });
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_STRAPI === 'true') {
+      console.error('[Projects Page] Error fetching member news:', error);
+    }
+    news = [];
+  }
 
   if (!news || !Array.isArray(news) || news.length === 0) {
     return (
@@ -62,24 +86,58 @@ async function MemberNewsContent() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 md:py-16">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-        {news.map((item: MemberNewsItem) => {
+        {news.map((item: MemberNewsItem, index: number) => {
+          // Handle different Strapi data structures
           const attrs = item.attributes || item
-          const imageUrl = getImageUrl(attrs?.image || item.image) || '/img/background.jpg'
+          const itemId = item.id || item.documentId || index
+          
+          // Get image URL with fallback
+          const imageData = attrs?.image || item.image
+          const imageUrl = getImageUrl(imageData) || '/img/background.jpg'
+          
+          // Get date with fallback
           const dateValue = attrs?.publishedAt || attrs?.createdAt || item.publishedAt || item.createdAt || ''
           const formattedDate = dateValue
-            ? new Date(dateValue).toLocaleDateString('mn-MN')
+            ? new Date(dateValue).toLocaleDateString('mn-MN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+              })
             : ''
+
+          // Get title and description with fallbacks
+          const title = attrs?.title || item.title || 'Гишүүн байгууллагын мэдээ'
+          const description = attrs?.description || attrs?.content || item.description || item.content || 'Мэдээлэл байхгүй байна.'
+          
+          // Get alt text for image
+          const imageAlt = attrs?.image?.data?.attributes?.alternativeText 
+            || attrs?.image?.alternativeText
+            || imageData?.data?.attributes?.alternativeText
+            || imageData?.alternativeText
+            || title
+
+          // Debug logging for first item
+          if (process.env.NODE_ENV === 'development' && index === 0) {
+            console.log('[Projects Page] First news item:', {
+              id: itemId,
+              title,
+              hasImage: !!imageData,
+              imageUrl,
+              dateValue,
+              formattedDate
+            });
+          }
 
           return (
             <NewsCard
-              key={item.id}
-              id={item.id.toString()}
+              key={itemId}
+              id={itemId.toString()}
               hrefPrefix="projects"
-              title={attrs?.title || item.title || 'Гишүүн байгууллагын мэдээ'}
-              description={attrs?.description || attrs?.content || item.description || item.content || 'Мэдээлэл байхгүй байна.'}
+              title={title}
+              description={description}
               date={formattedDate}
               image={imageUrl}
-              alt={attrs?.image?.data?.attributes?.alternativeText || attrs?.title || 'Гишүүн байгууллагын мэдээ'}
+              alt={imageAlt}
             />
           )
         })}
@@ -92,12 +150,10 @@ export default function MemberProjectsNewsPage() {
   return (
     <>
       <section className="bg-gradient-to-r from-indigo-50 via-white to-purple-50 border-y border-indigo-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-14">
-          <p className="text-sm text-indigo-600 font-semibold mb-2">Гишүүн байгууллагууд</p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Гишүүн байгууллагуудын мэдээ</h1>
-          <p className="mt-3 text-sm sm:text-base text-gray-600 max-w-3xl">
-            Гишүүн байгууллагуудын хүрээнд өрнөж буй мэдээ, төсөл хөтөлбөр, хамтын ажиллагааны мэдээллийг нэг дороос аваарай.
-          </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 text-center sm:text-left">
+            Гишүүн байгууллагууд
+          </h1>
         </div>
       </section>
 
